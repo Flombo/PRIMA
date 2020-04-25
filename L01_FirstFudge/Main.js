@@ -1,55 +1,45 @@
-namespace L01_FirstFudge {
-    import f = FudgeCore;
-
-    window.addEventListener("load", (event) => {
+var L01_FirstFudge;
+(function (L01_FirstFudge) {
+    var f = FudgeCore;
+    window.addEventListener("load", function (event) {
         hndLoad(event);
     });
-
-    function hndLoad(_event: Event): void {
-        let canvas: HTMLCanvasElement = document.querySelector("canvas");
+    function hndLoad(_event) {
+        var canvas = document.querySelector("canvas");
         canvas.setAttribute("style", "width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
-
-        let xTranslationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("xTranslation");
-        let yTranslationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("yTranslation");
-        let zTranslationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("zTranslation");
-        let xRotationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("xRotation");
-        let yRotationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("yRotation");
-        let zRotationSlider : HTMLInputElement = <HTMLInputElement>document.getElementById("zRotation");
-        let outputX : HTMLInputElement = <HTMLInputElement>document.getElementById("xOutput");
-        let outputY : HTMLInputElement = <HTMLInputElement>document.getElementById("yOutput");
-        let outputZ : HTMLInputElement = <HTMLInputElement>document.getElementById("zOutput");
-        let yRotationOutput : HTMLInputElement = <HTMLInputElement>document.getElementById("yRotationOutput");
-        let xOutputRotation : HTMLInputElement = <HTMLInputElement>document.getElementById("xOutputRotation");
-        let zOutputRotation : HTMLInputElement = <HTMLInputElement>document.getElementById("zOutputRotation");
-
-        let x = 0;
-        let z = 0;
-        let y = 0;
-
-        let node: f.Node = new f.Node("Quad");
-
-        let mesh: f.MeshQuad = new f.MeshCube();
-        let cmpMesh: f.ComponentMesh = new f.ComponentMesh(mesh);
+        var xTranslationSlider = document.getElementById("xTranslation");
+        var yTranslationSlider = document.getElementById("yTranslation");
+        var zTranslationSlider = document.getElementById("zTranslation");
+        var xRotationSlider = document.getElementById("xRotation");
+        var yRotationSlider = document.getElementById("yRotation");
+        var zRotationSlider = document.getElementById("zRotation");
+        var outputX = document.getElementById("xOutput");
+        var outputY = document.getElementById("yOutput");
+        var outputZ = document.getElementById("zOutput");
+        var yRotationOutput = document.getElementById("yRotationOutput");
+        var xOutputRotation = document.getElementById("xOutputRotation");
+        var zOutputRotation = document.getElementById("zOutputRotation");
+        var x = 0;
+        var z = 0;
+        var y = 0;
+        var node = new f.Node("Quad");
+        var mesh = new f.MeshCube();
+        var cmpMesh = new f.ComponentMesh(mesh);
         node.addComponent(cmpMesh);
-
         node.addComponent(new f.ComponentTransform());
         node.getComponent(f.ComponentMesh).pivot.scaleY(0.5);
         node.getComponent(f.ComponentMesh).pivot.scaleX(0.5);
         node.getComponent(f.ComponentMesh).pivot.scaleZ(0.5);
-
-        let mtrSolidWhite: f.Material = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
-        let cmpMaterial: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidWhite);
+        var mtrSolidWhite = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
+        var cmpMaterial = new f.ComponentMaterial(mtrSolidWhite);
         node.addComponent(cmpMaterial);
-
-        let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
+        var cmpCamera = new f.ComponentCamera();
         cmpCamera.pivot.translateZ(2);
         cmpCamera.pivot.rotateY(180);
-
-        let viewport : f.Viewport = new f.Viewport();
+        var viewport = new f.Viewport();
         viewport.initialize("Viewport", node, cmpCamera, canvas);
         window.addEventListener("keydown", keyDownHandler);
-
-        function keyDownHandler(event : KeyboardEvent){
+        function keyDownHandler(event) {
             switch (event.key) {
                 case f.KEYBOARD_CODE.ARROW_UP:
                     node.cmpTransform.local.translateY(0.01);
@@ -66,64 +56,56 @@ namespace L01_FirstFudge {
             }
             viewport.draw();
         }
-
         initRotationHandling();
         initTranslationHandling();
-
-        function initRotationHandling(){
+        function initRotationHandling() {
             changeRotationOutputBoxes();
             xRotationSlider.addEventListener("input", rotateModel);
             yRotationSlider.addEventListener("input", rotateModel);
             zRotationSlider.addEventListener("input", rotateModel);
-            xOutputRotation.addEventListener("input",  ()=> {
-                changeSliderValue(xRotationSlider, xOutputRotation)
+            xOutputRotation.addEventListener("input", function () {
+                changeSliderValue(xRotationSlider, xOutputRotation);
             });
-            yRotationOutput.addEventListener("input", ()=> {
+            yRotationOutput.addEventListener("input", function () {
                 changeSliderValue(yRotationSlider, yRotationOutput);
             });
-            zOutputRotation.addEventListener("input", ()=> {
+            zOutputRotation.addEventListener("input", function () {
                 changeSliderValue(zRotationSlider, zOutputRotation);
             });
         }
-
-        function changeSliderValue(slider : HTMLInputElement, output : HTMLInputElement){
+        function changeSliderValue(slider, output) {
             slider.value = output.value;
             rotateModel();
             translateModel();
         }
-
-        function initTranslationHandling(){
+        function initTranslationHandling() {
             changeTranslationOutputBoxes();
-            xTranslationSlider.addEventListener("input", () => { translateModel()});
-            yTranslationSlider.addEventListener("input", () => { translateModel() });
-            zTranslationSlider.addEventListener("input", () => { translateModel() });
-            outputX.addEventListener("input", ()=> {
+            xTranslationSlider.addEventListener("input", function () { translateModel(); });
+            yTranslationSlider.addEventListener("input", function () { translateModel(); });
+            zTranslationSlider.addEventListener("input", function () { translateModel(); });
+            outputX.addEventListener("input", function () {
                 changeSliderValue(xTranslationSlider, outputX);
             });
-            outputZ.addEventListener("input", ()=> {
+            outputZ.addEventListener("input", function () {
                 changeSliderValue(zTranslationSlider, outputZ);
             });
-            outputY.addEventListener("input", ()=> {
+            outputY.addEventListener("input", function () {
                 changeSliderValue(yTranslationSlider, outputY);
             });
         }
-
         function changeRotationOutputBoxes() {
             changeOutputSlider(xOutputRotation, xRotationSlider);
             changeOutputSlider(yRotationOutput, yRotationSlider);
             changeOutputSlider(zOutputRotation, zRotationSlider);
         }
-
-        function changeTranslationOutputBoxes(){
+        function changeTranslationOutputBoxes() {
             changeOutputSlider(outputX, xTranslationSlider);
             changeOutputSlider(outputY, yTranslationSlider);
             changeOutputSlider(outputZ, zTranslationSlider);
         }
-
-        function changeOutputSlider(output : HTMLInputElement, slider : HTMLInputElement){
+        function changeOutputSlider(output, slider) {
             output.value = slider.value;
         }
-
         function rotateModel() {
             changeOutputSlider(yRotationOutput, yRotationSlider);
             changeOutputSlider(xOutputRotation, xRotationSlider);
@@ -133,7 +115,6 @@ namespace L01_FirstFudge {
             node.getComponent(f.ComponentMesh).pivot.rotateZ(Number(zRotationSlider.value));
             viewport.draw();
         }
-
         function translateModel() {
             changeTranslationOutputBoxes();
             translateByValueAndAxisCode(Number(xTranslationSlider.value), 'x');
@@ -141,8 +122,7 @@ namespace L01_FirstFudge {
             translateByValueAndAxisCode(Number(zTranslationSlider.value), 'z');
             viewport.draw();
         }
-
-        function translateByValueAndAxisCode(value : number, axisCode){
+        function translateByValueAndAxisCode(value, axisCode) {
             switch (axisCode) {
                 case 'x':
                     translateXByValue(value);
@@ -155,35 +135,33 @@ namespace L01_FirstFudge {
                     break;
             }
         }
-
-        function translateXByValue(value){
-            if(value > x){
+        function translateXByValue(value) {
+            if (value > x) {
                 node.cmpTransform.local.translateX(0.01);
-            } else if( value < x){
+            }
+            else if (value < x) {
                 node.cmpTransform.local.translateX(-0.01);
             }
             x = value;
         }
-
-        function translateYByValue(value){
-            if(value > y){
+        function translateYByValue(value) {
+            if (value > y) {
                 node.cmpTransform.local.translateY(0.01);
-            } else if(value < y){
+            }
+            else if (value < y) {
                 node.cmpTransform.local.translateY(-0.01);
             }
             y = value;
         }
-
-        function translateZByValue(value){
-            if(value > z){
+        function translateZByValue(value) {
+            if (value > z) {
                 node.cmpTransform.local.translateZ(0.01);
-            } else if(value < z){
+            }
+            else if (value < z) {
                 node.cmpTransform.local.translateZ(-0.01);
             }
             z = value;
         }
-
-       viewport.draw();
+        viewport.draw();
     }
-
-}
+})(L01_FirstFudge || (L01_FirstFudge = {}));
