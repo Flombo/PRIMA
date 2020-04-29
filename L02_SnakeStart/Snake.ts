@@ -8,7 +8,7 @@ namespace Snake {
         private headElement : f.Node;
 
         constructor() {
-            this.headDirection = 'start';
+            this.headDirection = 'right';
         }
 
         protected initSnake(children) : void {
@@ -47,10 +47,6 @@ namespace Snake {
                     this.moveChildrenElements();
                     this.headElement.mtxLocal.translateY(-1);
                     break;
-                case 'start':
-                    this.moveChildrenElements();
-                    this.headElement.mtxLocal.translateX(1);
-                    break;
             }
         }
 
@@ -58,7 +54,7 @@ namespace Snake {
             switch (this.headDirection) {
                 case 'right':
                     this.moveChildrenElements();
-                    this.headDirection = 'start';
+                    this.headDirection = 'left';
                     this.headElement.mtxLocal.translateX(-1);
                     break;
                 case 'down':
@@ -76,11 +72,6 @@ namespace Snake {
                     this.headElement.mtxLocal.translateX(-1);
                     this.headDirection = 'left';
                     break;
-                case 'start':
-                    this.moveChildrenElements();
-                    this.headElement.mtxLocal.translateX(-1);
-                    this.headDirection = 'left';
-                    break;
             }
         }
 
@@ -88,7 +79,7 @@ namespace Snake {
             switch (this.headDirection) {
                 case 'left':
                     this.moveChildrenElements();
-                    this.headDirection = 'start';
+                    this.headDirection = 'right';
                     this.headElement.mtxLocal.translateX(1);
                     break;
                 case 'down':
@@ -118,17 +109,13 @@ namespace Snake {
             switch (this.headDirection) {
                 case 'down':
                     this.moveChildrenElements();
-                    this.moveUpOrDownAndSetDirection(1, 'start');
+                    this.moveUpOrDownAndSetDirection(1, 'up');
                     break;
                 case 'left':
                     this.moveChildrenElements();
                     this.moveUpOrDownAndSetDirection(1, 'up');
                     break;
                 case 'right':
-                    this.moveChildrenElements();
-                    this.moveUpOrDownAndSetDirection(1, 'up');
-                    break;
-                case 'start':
                     this.moveChildrenElements();
                     this.moveUpOrDownAndSetDirection(1, 'up');
                     break;
@@ -143,7 +130,7 @@ namespace Snake {
             switch (this.headDirection) {
                 case 'up':
                     this.moveChildrenElements();
-                    this.moveUpOrDownAndSetDirection(-1, 'start');
+                    this.moveUpOrDownAndSetDirection(-1, 'down');
                     break;
                 case 'left':
                     this.moveChildrenElements();
@@ -154,10 +141,6 @@ namespace Snake {
                     this.moveUpOrDownAndSetDirection(-1, 'down');
                     break;
                 case 'down':
-                    this.moveChildrenElements();
-                    this.moveUpOrDownAndSetDirection(-1, 'down');
-                    break;
-                case 'start':
                     this.moveChildrenElements();
                     this.moveUpOrDownAndSetDirection(-1, 'down');
                     break;
