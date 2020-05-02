@@ -1,5 +1,5 @@
 namespace L01_FirstFudge {
-    import f = FudgeCore;
+    import f =                            FudgeCore;
 
     class UI{
         private xTranslationSlider: HTMLInputElement;

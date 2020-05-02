@@ -1,8 +1,9 @@
+"use strict";
 var L01_FirstFudge;
 (function (L01_FirstFudge) {
     var f = FudgeCore;
-    var UI = /** @class */ (function () {
-        function UI(node, viewport) {
+    class UI {
+        constructor(node, viewport) {
             this.xTranslationSlider = document.getElementById("xTranslation");
             this.yTranslationSlider = document.getElementById("yTranslation");
             this.zTranslationSlider = document.getElementById("zTranslation");
@@ -21,77 +22,74 @@ var L01_FirstFudge;
             this.node = node;
             this.viewport = viewport;
         }
-        UI.prototype.initTranslationHandling = function () {
-            var _this = this;
+        initTranslationHandling() {
             this.changeTranslationOutputBoxes();
-            this.xTranslationSlider.addEventListener("input", function () { _this.translateModel(); });
-            this.yTranslationSlider.addEventListener("input", function () { _this.translateModel(); });
-            this.zTranslationSlider.addEventListener("input", function () { _this.translateModel(); });
+            this.xTranslationSlider.addEventListener("input", () => { this.translateModel(); });
+            this.yTranslationSlider.addEventListener("input", () => { this.translateModel(); });
+            this.zTranslationSlider.addEventListener("input", () => { this.translateModel(); });
             this.addOutputListener(this.outputX, this.xTranslationSlider);
             this.addOutputListener(this.outputZ, this.zTranslationSlider);
             this.addOutputListener(this.outputY, this.yTranslationSlider);
-        };
-        UI.prototype.initRotationHandling = function () {
-            var _this = this;
+        }
+        initRotationHandling() {
             this.changeRotationOutputBoxes();
-            this.xRotationSlider.addEventListener("input", function () {
-                _this.rotateModel();
+            this.xRotationSlider.addEventListener("input", () => {
+                this.rotateModel();
             });
-            this.yRotationSlider.addEventListener("input", function () {
-                _this.rotateModel();
+            this.yRotationSlider.addEventListener("input", () => {
+                this.rotateModel();
             });
-            this.zRotationSlider.addEventListener("input", function () {
-                _this.rotateModel();
+            this.zRotationSlider.addEventListener("input", () => {
+                this.rotateModel();
             });
-            this.xOutputRotation.addEventListener("input", function () {
-                _this.changeSliderValue(_this.xRotationSlider, _this.xOutputRotation);
+            this.xOutputRotation.addEventListener("input", () => {
+                this.changeSliderValue(this.xRotationSlider, this.xOutputRotation);
             });
-            this.yRotationOutput.addEventListener("input", function () {
-                _this.changeSliderValue(_this.yRotationSlider, _this.yRotationOutput);
+            this.yRotationOutput.addEventListener("input", () => {
+                this.changeSliderValue(this.yRotationSlider, this.yRotationOutput);
             });
-            this.zOutputRotation.addEventListener("input", function () {
-                _this.changeSliderValue(_this.zRotationSlider, _this.zOutputRotation);
+            this.zOutputRotation.addEventListener("input", () => {
+                this.changeSliderValue(this.zRotationSlider, this.zOutputRotation);
             });
-        };
-        UI.prototype.changeSliderValue = function (slider, output) {
+        }
+        changeSliderValue(slider, output) {
             slider.value = output.value;
             this.rotateModel();
             this.translateModel();
-        };
-        UI.prototype.addOutputListener = function (output, slider) {
-            var _this = this;
-            output.addEventListener("input", function () {
-                _this.changeSliderValue(slider, output);
+        }
+        addOutputListener(output, slider) {
+            output.addEventListener("input", () => {
+                this.changeSliderValue(slider, output);
             });
-        };
-        UI.prototype.changeOutputSlider = function (output, slider) {
+        }
+        changeOutputSlider(output, slider) {
             output.value = slider.value;
-        };
-        UI.prototype.changeRotationOutputBoxes = function () {
+        }
+        changeRotationOutputBoxes() {
             this.changeOutputSlider(this.xOutputRotation, this.xRotationSlider);
             this.changeOutputSlider(this.yRotationOutput, this.yRotationSlider);
             this.changeOutputSlider(this.zOutputRotation, this.zRotationSlider);
-        };
-        UI.prototype.changeTranslationOutputBoxes = function () {
+        }
+        changeTranslationOutputBoxes() {
             this.changeOutputSlider(this.outputX, this.xTranslationSlider);
             this.changeOutputSlider(this.outputY, this.yTranslationSlider);
             this.changeOutputSlider(this.outputZ, this.zTranslationSlider);
-        };
-        UI.prototype.rotateModel = function () {
+        }
+        rotateModel() {
             this.changeRotationOutputBoxes();
             this.node.getComponent(f.ComponentMesh).pivot.rotateY(Number(this.yRotationSlider.value));
             this.node.getComponent(f.ComponentMesh).pivot.rotateX(Number(this.xRotationSlider.value));
             this.node.getComponent(f.ComponentMesh).pivot.rotateZ(Number(this.zRotationSlider.value));
             this.viewport.draw();
-        };
-        UI.prototype.translateModel = function () {
+        }
+        translateModel() {
             this.changeTranslationOutputBoxes();
             this.translateByValueAndAxisCode(Number(this.xTranslationSlider.value), 'x');
             this.translateByValueAndAxisCode(Number(this.yTranslationSlider.value), 'y');
             this.translateByValueAndAxisCode(Number(this.zTranslationSlider.value), 'z');
             this.viewport.draw();
-        };
-        UI.prototype.translateByValueAndAxisCode = function (value, axisCode) {
+        }
+        translateByValueAndAxisCode(value, axisCode) {
             switch (axisCode) {
                 case 'x':
                     this.translateXByValue(value);
@@ -103,8 +101,8 @@ var L01_FirstFudge;
                     this.translateZByValue(value);
                     break;
             }
-        };
-        UI.prototype.translateXByValue = function (value) {
+        }
+        translateXByValue(value) {
             console.log(value, this.x);
             if (value > this.x) {
                 this.node.cmpTransform.local.translateX(1);
@@ -113,8 +111,8 @@ var L01_FirstFudge;
                 this.node.cmpTransform.local.translateX(-1);
             }
             this.x = value;
-        };
-        UI.prototype.translateYByValue = function (value) {
+        }
+        translateYByValue(value) {
             if (value > this.y) {
                 this.node.cmpTransform.local.translateY(1);
             }
@@ -122,8 +120,8 @@ var L01_FirstFudge;
                 this.node.cmpTransform.local.translateY(-1);
             }
             this.y = value;
-        };
-        UI.prototype.translateZByValue = function (value) {
+        }
+        translateZByValue(value) {
             if (value > this.z) {
                 this.node.cmpTransform.local.translateZ(1);
             }
@@ -131,35 +129,34 @@ var L01_FirstFudge;
                 this.node.cmpTransform.local.translateZ(-1);
             }
             this.z = value;
-        };
-        return UI;
-    }());
-    window.addEventListener("load", function (event) {
+        }
+    }
+    window.addEventListener("load", (event) => {
         hndLoad(event);
     });
     function hndLoad(_event) {
-        var canvas = document.querySelector("canvas");
+        let canvas = document.querySelector("canvas");
         canvas.setAttribute("style", "width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
-        var cube1Checkbox = document.getElementById("cube1");
-        var cube2Checkbox = document.getElementById("cube2");
-        var rootNode = new f.Node("root");
-        var node = new f.Node("Quad");
-        var planeNode = new f.Node("Plane");
-        var mesh = new f.MeshCube();
-        var cmpMesh = new f.ComponentMesh(mesh);
+        let cube1Checkbox = document.getElementById("cube1");
+        let cube2Checkbox = document.getElementById("cube2");
+        let rootNode = new f.Node("root");
+        let node = new f.Node("Quad");
+        let planeNode = new f.Node("Plane");
+        let mesh = new f.MeshCube();
+        let cmpMesh = new f.ComponentMesh(mesh);
         node.addComponent(cmpMesh);
-        var planeMesh = new f.MeshCube();
-        var cmpPlaneMesh = new f.ComponentMesh(planeMesh);
+        let planeMesh = new f.MeshCube();
+        let cmpPlaneMesh = new f.ComponentMesh(planeMesh);
         planeNode.addComponent(cmpPlaneMesh);
         node.addComponent(new f.ComponentTransform());
         node.getComponent(f.ComponentMesh).pivot.scaleY(0.5);
         node.getComponent(f.ComponentMesh).pivot.scaleX(0.5);
         node.getComponent(f.ComponentMesh).pivot.scaleZ(0.5);
-        var mtrSolidWhite = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
-        var cmpMaterial = new f.ComponentMaterial(mtrSolidWhite);
+        let mtrSolidWhite = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
+        let cmpMaterial = new f.ComponentMaterial(mtrSolidWhite);
         node.addComponent(cmpMaterial);
-        var planeMaterial = new f.Material("PlaneMaterial", f.ShaderUniColor, new f.CoatColored(f.Color.CSS('#fff')));
-        var planeCMPMaterial = new f.ComponentMaterial(planeMaterial);
+        let planeMaterial = new f.Material("PlaneMaterial", f.ShaderUniColor, new f.CoatColored(f.Color.CSS('#fff')));
+        let planeCMPMaterial = new f.ComponentMaterial(planeMaterial);
         planeNode.addComponent(planeCMPMaterial);
         planeNode.addComponent(new f.ComponentTransform());
         planeNode.getComponent(f.ComponentMesh).pivot.scaleY(1);
@@ -169,12 +166,12 @@ var L01_FirstFudge;
         planeNode.cmpTransform.local.translateZ(5);
         planeNode.cmpTransform.local.translateX(2);
         planeNode.cmpTransform.local.translateY(1);
-        var cmpCamera = new f.ComponentCamera();
+        let cmpCamera = new f.ComponentCamera();
         cmpCamera.pivot.translateZ(15);
         cmpCamera.pivot.rotateY(180);
         rootNode.appendChild(planeNode);
         rootNode.appendChild(node);
-        var viewport = new f.Viewport();
+        let viewport = new f.Viewport();
         viewport.initialize("Viewport", rootNode, cmpCamera, canvas);
         window.addEventListener("keydown", keyDownHandler);
         function keyDownHandler(event) {
@@ -194,23 +191,23 @@ var L01_FirstFudge;
             }
             viewport.draw();
         }
-        var model = node;
+        let model = node;
         function initCheckboxes() {
-            cube1Checkbox.addEventListener("change", function () {
+            cube1Checkbox.addEventListener("change", () => {
                 if (cube1Checkbox.checked) {
                     model = node;
                     cube2Checkbox.checked = false;
                     console.log("c1 : " + model);
                 }
             });
-            cube2Checkbox.addEventListener("change", function () {
+            cube2Checkbox.addEventListener("change", () => {
                 if (cube2Checkbox.checked) {
                     model = planeNode;
                     cube1Checkbox.checked = false;
                     console.log("c2 : " + model);
                 }
             });
-            var ui = new UI(model, viewport);
+            let ui = new UI(model, viewport);
             ui.initRotationHandling();
             ui.initTranslationHandling();
         }
@@ -218,3 +215,4 @@ var L01_FirstFudge;
         viewport.draw();
     }
 })(L01_FirstFudge || (L01_FirstFudge = {}));
+//# sourceMappingURL=Main.js.map
