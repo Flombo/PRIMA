@@ -11,6 +11,7 @@ namespace L02_SnakeStart{
 		private collectibleClass : Collectibles;
 		private nav : HTMLElement;
 		private score : number;
+		private displayOneTime : number;
 
 		constructor(snake : Snake, wallSegments : f.Node[], collectibles : f.Node[], collectibleClass : Collectibles) {
 			this.snake = snake;
@@ -20,6 +21,7 @@ namespace L02_SnakeStart{
 			this.collectibleClass = collectibleClass;
 			this.nav = document.getElementsByTagName("nav")[0];
 			this.score = 0;
+			this.displayOneTime = 0;
 		}
 
 		public checkCollision() : void {
@@ -80,6 +82,13 @@ namespace L02_SnakeStart{
 				this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y
 			){
 				this.snake.setIsDeadTrue();
+			}
+		}
+
+		public displayScorePrompt() : void {
+			if(this.displayOneTime === 0){
+				alert("You died ! Your score is " + this.score);
+				this.displayOneTime = 1;
 			}
 		}
 

@@ -21,14 +21,19 @@ var L02_SnakeStart;
         cmpCamera.pivot.rotateY(180);
         let viewport = new f.Viewport();
         viewport.initialize("Viewport", root, cmpCamera, canvas);
-        f.Loop.start(f.LOOP_MODE.TIME_REAL, 5);
+        f.Loop.start(f.LOOP_MODE.TIME_REAL, 3);
         f.Loop.addEventListener("loopFrame", renderLoop);
         function renderLoop() {
             if (snake !== undefined && snake !== null) {
-                snake.checkCollisions();
-                snake.moveAll();
+                if (!snake.getIsDead()) {
+                    snake.checkCollisions();
+                    snake.moveAll();
+                }
+                else {
+                    snake.displayScorePrompt();
+                }
+                viewport.draw();
             }
-            viewport.draw();
         }
     }
 })(L02_SnakeStart || (L02_SnakeStart = {}));

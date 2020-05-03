@@ -31,7 +31,15 @@ namespace L02_SnakeStart {
         public setIsDeadTrue() : void {
             this.headDirection = 'dead';
             this.isDead = true;
+        }
+
+        public getIsDead() : boolean {
+            return this.isDead;
+        }
+
+        public displayScorePrompt() : void {
             this.animateDeath();
+            this.collisionChecker.displayScorePrompt();
         }
 
         private animateDeath() : void {

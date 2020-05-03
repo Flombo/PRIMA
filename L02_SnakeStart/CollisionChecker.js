@@ -10,6 +10,7 @@ var L02_SnakeStart;
             this.collectibleClass = collectibleClass;
             this.nav = document.getElementsByTagName("nav")[0];
             this.score = 0;
+            this.displayOneTime = 0;
         }
         checkCollision() {
             this.checkSnakeSegmentCollision();
@@ -57,6 +58,12 @@ var L02_SnakeStart;
                 || this.snakeHead.mtxLocal.translation.y !== 0 &&
                     this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y) {
                 this.snake.setIsDeadTrue();
+            }
+        }
+        displayScorePrompt() {
+            if (this.displayOneTime === 0) {
+                alert("You died ! Your score is " + this.score);
+                this.displayOneTime = 1;
             }
         }
     }

@@ -18,7 +18,13 @@ var L02_SnakeStart;
         setIsDeadTrue() {
             this.headDirection = 'dead';
             this.isDead = true;
+        }
+        getIsDead() {
+            return this.isDead;
+        }
+        displayScorePrompt() {
             this.animateDeath();
+            this.collisionChecker.displayScorePrompt();
         }
         animateDeath() {
             for (let i = 1; i < this.snakeChildren.length; i++) {

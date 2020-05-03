@@ -29,15 +29,19 @@ namespace L02_SnakeStart {
 		let viewport : f.Viewport = new f.Viewport();
 		viewport.initialize("Viewport", root, cmpCamera, canvas);
 
-		f.Loop.start(f.LOOP_MODE.TIME_REAL, 5);
+		f.Loop.start(f.LOOP_MODE.TIME_REAL, 3);
 		f.Loop.addEventListener("loopFrame", renderLoop);
 
 		function renderLoop () {
 			if (snake !== undefined && snake !== null) {
-				snake.checkCollisions();
-				snake.moveAll();
+				if(!snake.getIsDead()) {
+					snake.checkCollisions();
+					snake.moveAll();
+				} else {
+					snake.displayScorePrompt();
+				}
+				viewport.draw();
 			}
-			viewport.draw();
 		}
 
 	}
