@@ -25,8 +25,8 @@ var L02_SnakeStart;
         f.Loop.addEventListener("loopFrame", renderLoop);
         function renderLoop() {
             if (snake !== undefined && snake !== null) {
-                snake.moveAll();
                 snake.checkCollisions();
+                snake.moveAll();
             }
             viewport.draw();
         }

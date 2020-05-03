@@ -32,7 +32,7 @@ namespace L02_SnakeStart{
 			let cmpMesh = new f.ComponentMesh(this.wallMesh);
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(0.5);
+			cmpMesh.pivot.scaleY(1);
 			cmpMesh.pivot.scaleX(20);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(0, 4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
@@ -44,7 +44,7 @@ namespace L02_SnakeStart{
 			let cmpMesh = new f.ComponentMesh(this.wallMesh);
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(0.5);
+			cmpMesh.pivot.scaleY(1);
 			cmpMesh.pivot.scaleX(20);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(0, -4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
@@ -57,7 +57,7 @@ namespace L02_SnakeStart{
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
 			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(0.5);
+			cmpMesh.pivot.scaleX(1.3);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(-8, 4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
 			this.appendChild(wallSegment);
@@ -69,7 +69,7 @@ namespace L02_SnakeStart{
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
 			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(0.5);
+			cmpMesh.pivot.scaleX(1.3);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(8, 4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
 			this.appendChild(wallSegment);

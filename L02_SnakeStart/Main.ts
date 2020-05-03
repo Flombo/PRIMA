@@ -34,8 +34,8 @@ namespace L02_SnakeStart {
 
 		function renderLoop () {
 			if (snake !== undefined && snake !== null) {
-				snake.moveAll();
 				snake.checkCollisions();
+				snake.moveAll();
 			}
 			viewport.draw();
 		}
