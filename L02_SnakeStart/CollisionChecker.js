@@ -11,6 +11,8 @@ var L02_SnakeStart;
             this.nav = document.getElementsByTagName("nav")[0];
             this.score = 0;
             this.displayOneTime = 0;
+            this.collectSound = new Audio("./music/correctChoice.wav");
+            this.collisionSound = new Audio("./music/wrongChoice.wav");
         }
         checkCollision() {
             this.checkSnakeSegmentCollision();
@@ -24,8 +26,9 @@ var L02_SnakeStart;
             }
         }
         checkSnakeSegment(snakeSegment) {
-            if (this.snakeHead.mtxLocal.translation.x === snakeSegment.mtxLocal.translation.x
-                && this.snakeHead.mtxLocal.translation.y === snakeSegment.mtxLocal.translation.y) {
+            if (Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(snakeSegment.mtxLocal.translation.x)
+                && Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(snakeSegment.mtxLocal.translation.y)) {
+                this.collisionSound.play();
                 this.snake.setIsDeadTrue();
             }
         }
@@ -42,21 +45,23 @@ var L02_SnakeStart;
             });
         }
         checkCollectibleElement(element, snakeElement) {
-            if (snakeElement.mtxLocal.translation.x === element.mtxLocal.translation.x
-                && snakeElement.mtxLocal.translation.y === element.mtxLocal.translation.y) {
+            if (Math.round(snakeElement.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
+                && Math.round(snakeElement.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)) {
                 element.getParent().removeChild(element);
                 this.collectibleClass.initCollectibleElement();
                 this.collectibles = this.collectibleClass.getCollectibleElements();
                 this.score++;
                 this.nav.innerText = "Score : " + this.score;
                 this.snake.grow();
+                this.collectSound.play();
             }
         }
         checkWallSegment(element) {
-            if (this.snakeHead.mtxLocal.translation.x !== 0
-                && this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-                || this.snakeHead.mtxLocal.translation.y !== 0 &&
-                    this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y) {
+            if (Math.round(this.snakeHead.mtxLocal.translation.x) !== 0
+                && Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
+                || Math.round(this.snakeHead.mtxLocal.translation.y) !== 0 &&
+                    Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)) {
+                this.collisionSound.play();
                 this.snake.setIsDeadTrue();
             }
         }

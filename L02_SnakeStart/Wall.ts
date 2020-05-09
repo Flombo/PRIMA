@@ -4,12 +4,12 @@ namespace L02_SnakeStart{
 
 	export class Wall extends f.Node{
 
-		private wallMesh : f.MeshQuad;
+		private wallMesh : f.MeshCube;
 		private wallMaterial : f.Material;
 
 		constructor() {
 			super("Wall");
-			this.wallMesh = new f.MeshQuad();
+			this.wallMesh = new f.MeshCube();
 			this.wallMaterial = new f.Material(
 				"SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#202020"))
 			);
@@ -57,7 +57,7 @@ namespace L02_SnakeStart{
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
 			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(1.3);
+			cmpMesh.pivot.scaleX(1);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(-8, 4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
 			this.appendChild(wallSegment);
@@ -69,7 +69,7 @@ namespace L02_SnakeStart{
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
 			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(1.3);
+			cmpMesh.pivot.scaleX(1);
 			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(8, 4, 0))));
 			wallSegment.addComponent(wallComponentMaterial);
 			this.appendChild(wallSegment);

@@ -5,7 +5,7 @@ var L02_SnakeStart;
     class Wall extends f.Node {
         constructor() {
             super("Wall");
-            this.wallMesh = new f.MeshQuad();
+            this.wallMesh = new f.MeshCube();
             this.wallMaterial = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("#202020")));
             this.initWalls();
         }
@@ -46,7 +46,7 @@ var L02_SnakeStart;
             let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
             wallSegment.addComponent(cmpMesh);
             cmpMesh.pivot.scaleY(20);
-            cmpMesh.pivot.scaleX(1.3);
+            cmpMesh.pivot.scaleX(1);
             wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(-8, 4, 0))));
             wallSegment.addComponent(wallComponentMaterial);
             this.appendChild(wallSegment);
@@ -57,7 +57,7 @@ var L02_SnakeStart;
             let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
             wallSegment.addComponent(cmpMesh);
             cmpMesh.pivot.scaleY(20);
-            cmpMesh.pivot.scaleX(1.3);
+            cmpMesh.pivot.scaleX(1);
             wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(8, 4, 0))));
             wallSegment.addComponent(wallComponentMaterial);
             this.appendChild(wallSegment);

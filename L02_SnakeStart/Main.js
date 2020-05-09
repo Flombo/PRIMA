@@ -15,24 +15,40 @@ var L02_SnakeStart;
         root.appendChild(collectibles);
         root.appendChild(walls);
         root.appendChild(snake);
-        let cmpCamera = new f.ComponentCamera();
-        cmpCamera.backgroundColor = f.Color.CSS("lavender");
-        cmpCamera.pivot.translateZ(15);
-        cmpCamera.pivot.rotateY(180);
+        let light = new f.LightAmbient(f.Color.CSS('orange'));
+        let lightComponent = new f.ComponentLight(light);
+        let lightNode = new f.Node("light");
+        lightNode.addComponent(lightComponent);
+        root.appendChild(lightNode);
         let viewport = new f.Viewport();
-        viewport.initialize("Viewport", root, cmpCamera, canvas);
-        f.Loop.start(f.LOOP_MODE.TIME_REAL, 3);
+        viewport.initialize("Viewport", root, snake.getCamera(), canvas);
+        let canvasMirror = document.createElement('canvas');
+        canvasMirror.setAttribute("style", "width:" + (window.innerWidth / 5)
+            + "px; height:" + (window.innerHeight / 5) + "px;"
+            + "z-index:" + 999999 + ";"
+            + "position: absolute;"
+            + "left: 75%;"
+            + "border: 5px solid orange;"
+            + "border-radius: 100px;");
+        document.body.appendChild(canvasMirror);
+        let viewportMini = new f.Viewport();
+        viewportMini.initialize("ViewportMini", root, snake.getCameraForMirror(), canvasMirror);
+        f.Loop.start(f.LOOP_MODE.TIME_REAL, 2);
         f.Loop.addEventListener("loopFrame", renderLoop);
+        function moveLoop() {
+            if (!snake.getIsDead()) {
+                snake.checkCollisions();
+                snake.moveAll();
+            }
+            else {
+                snake.displayScorePrompt();
+            }
+        }
         function renderLoop() {
             if (snake !== undefined && snake !== null) {
-                if (!snake.getIsDead()) {
-                    snake.checkCollisions();
-                    snake.moveAll();
-                }
-                else {
-                    snake.displayScorePrompt();
-                }
+                moveLoop();
                 viewport.draw();
+                viewportMini.draw();
             }
         }
     }

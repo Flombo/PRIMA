@@ -12,6 +12,8 @@ namespace L02_SnakeStart{
 		private nav : HTMLElement;
 		private score : number;
 		private displayOneTime : number;
+		private collisionSound : HTMLAudioElement;
+		private collectSound : HTMLAudioElement;
 
 		constructor(snake : Snake, wallSegments : f.Node[], collectibles : f.Node[], collectibleClass : Collectibles) {
 			this.snake = snake;
@@ -22,6 +24,8 @@ namespace L02_SnakeStart{
 			this.nav = document.getElementsByTagName("nav")[0];
 			this.score = 0;
 			this.displayOneTime = 0;
+			this.collectSound = new Audio("./music/correctChoice.wav");
+			this.collisionSound = new Audio("./music/wrongChoice.wav");
 		}
 
 		public checkCollision() : void {
@@ -39,9 +43,10 @@ namespace L02_SnakeStart{
 
 		private checkSnakeSegment(snakeSegment : f.Node) : void {
 			if(
-				this.snakeHead.mtxLocal.translation.x === snakeSegment.mtxLocal.translation.x
-				&& this.snakeHead.mtxLocal.translation.y === snakeSegment.mtxLocal.translation.y
+				Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(snakeSegment.mtxLocal.translation.x)
+				&& Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(snakeSegment.mtxLocal.translation.y)
 			){
+				this.collisionSound.play();
 				this.snake.setIsDeadTrue();
 			}
 		}
@@ -62,8 +67,8 @@ namespace L02_SnakeStart{
 
 		private checkCollectibleElement(element : f.Node, snakeElement : f.Node) : void{
 			if(
-				snakeElement.mtxLocal.translation.x === element.mtxLocal.translation.x
-				&& snakeElement.mtxLocal.translation.y === element.mtxLocal.translation.y
+				Math.round(snakeElement.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
+				&& Math.round(snakeElement.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)
 			){
 				element.getParent().removeChild(element);
 				this.collectibleClass.initCollectibleElement();
@@ -71,16 +76,18 @@ namespace L02_SnakeStart{
 				this.score++;
 				this.nav.innerText = "Score : " + this.score;
 				this.snake.grow();
+				this.collectSound.play();
 			}
 		}
 
 		private checkWallSegment(element : f.Node) : void {
 			if(
-				this.snakeHead.mtxLocal.translation.x !== 0
-				&& this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-				|| this.snakeHead.mtxLocal.translation.y !== 0 &&
-				this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y
+				Math.round(this.snakeHead.mtxLocal.translation.x) !== 0
+				&& Math.round(this.snakeHead.mtxLocal.translation.x)=== Math.round(element.mtxLocal.translation.x)
+				|| Math.round(this.snakeHead.mtxLocal.translation.y) !== 0 &&
+				Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)
 			){
+				this.collisionSound.play();
 				this.snake.setIsDeadTrue();
 			}
 		}

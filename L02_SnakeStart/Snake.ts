@@ -8,20 +8,52 @@ namespace L02_SnakeStart {
         private headDirection : string;
         private headElement : f.Node;
         private isDead : boolean;
-        private readonly snakeSegmentMesh : f.MeshQuad;
+        private readonly snakeSegmentMesh : f.MeshCube;
         private readonly snakeSegmentMaterial : f.Material;
         private collisionChecker : CollisionChecker;
+        private componentCamera : f.ComponentCamera;
+        private cameraMirror : f.ComponentCamera;
 
         constructor(wallsegments : f.Node[], collectibleElements : f.Node[], collectibles : Collectibles) {
             super("Snake");
             this.headDirection = 'right';
             this.isDead = false;
-            this.snakeSegmentMesh = new f.MeshQuad();
+            this.snakeSegmentMesh = new f.MeshCube();
             this.snakeSegmentMaterial = new f.Material(
                 "SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen"))
             );
-            this.initSnake(2);
+
+            this.initSnake(1);
+
             this.collisionChecker = new CollisionChecker(this, wallsegments, collectibleElements, collectibles);
+            this.initCameraEgo();
+            this.initCameraMirror();
+        }
+
+        private initCameraMirror() : void {
+            this.cameraMirror = new f.ComponentCamera();
+            this.cameraMirror.backgroundColor = f.Color.CSS("grey");
+            this.cameraMirror.pivot.translateZ(15);
+            this.cameraMirror.pivot.rotateY(180);
+        }
+
+        private initCameraEgo() : void {
+            this.componentCamera = new f.ComponentCamera();
+            this.componentCamera.backgroundColor = f.Color.CSS('lightblue');
+            this.componentCamera.pivot.rotateY(90);
+            this.componentCamera.pivot.rotateZ(90);
+            this.componentCamera.pivot.rotateY(90);
+            this.componentCamera.pivot.translateZ(-1);
+
+            this.headElement.addComponent(this.componentCamera);
+        }
+
+        public getCameraForMirror() : f.ComponentCamera {
+            return this.cameraMirror;
+        }
+
+        public getCamera() : f.ComponentCamera {
+            return this.componentCamera;
         }
 
         public checkCollisions() : void {
@@ -38,17 +70,7 @@ namespace L02_SnakeStart {
         }
 
         public displayScorePrompt() : void {
-            this.animateDeath();
             this.collisionChecker.displayScorePrompt();
-        }
-
-        private animateDeath() : void {
-            for(let i : number = 1; i < this.snakeChildren.length; i++){
-                this.headElement.mtxLocal.rotateZ(30 * i);
-                this.snakeChildren[i].mtxLocal.rotateZ(30 * i);
-                this.headElement.mtxLocal.translateZ(i);
-                this.snakeChildren[i].mtxLocal.translateZ(i);
-            }
         }
 
         public getHeadElement() : f.Node {
@@ -73,10 +95,6 @@ namespace L02_SnakeStart {
             this.snakeChildren.push(snakeSegment);
         }
 
-        private setHeadDirection(direction : string) : void {
-            this.headDirection = direction;
-        }
-
         private initSnake(value : number) : void {
             this.initSnakeELements(value);
             this.snakeChildren = this.getChildren();
@@ -87,12 +105,6 @@ namespace L02_SnakeStart {
         private keyDownHandler(event : KeyboardEvent) : void {
             if(!this.isDead) {
                 switch (event.key) {
-                    case f.KEYBOARD_CODE.ARROW_UP:
-                        this.moveHeadUp();
-                        break;
-                    case f.KEYBOARD_CODE.ARROW_DOWN:
-                        this.moveHeadDown();
-                        break;
                     case f.KEYBOARD_CODE.ARROW_LEFT:
                         this.moveHeadLeft();
                         break;
@@ -133,67 +145,78 @@ namespace L02_SnakeStart {
 
         public moveAll() : void {
             if(!this.isDead) {
-                switch (this.headDirection) {
-                    case 'right':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateX(1);
-                        break;
-                    case 'left':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateX(-1);
-                        break;
-                    case 'up':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateY(1);
-                        break;
-                    case 'down':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateY(-1);
-                        break;
-                }
+                this.moveChildrenElements();
+                this.headElement.mtxLocal.translateY(1);
             }
         }
 
         private moveHeadLeft() : void {
             this.moveChildrenElements();
-            this.moveRightOrLeftAndSetDirection(-1, 'left');
+            this.moveLeft();
         }
 
         private moveHeadRight() : void {
             this.moveChildrenElements();
-            this.moveRightOrLeftAndSetDirection(1, 'right');
+            this.moveRight();
         }
 
-        private moveHeadUp() : void {
-            this.moveChildrenElements();
-            this.moveUpOrDownAndSetDirection(1, 'up');
-        }
-
-        private moveHeadDown() : void {
-            this.moveChildrenElements();
-            this.moveUpOrDownAndSetDirection(-1, 'down');
-        }
-
-        private moveRightOrLeftAndSetDirection(x : number, direction : string) : void {
+        private moveLeft() : void {
             if(!this.isDead) {
-                this.headElement.mtxLocal.translateX(x);
-                this.setHeadDirection(direction);
+                switch (this.headDirection) {
+                    case 'up':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'left';
+                        break;
+                    case 'down':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'left';
+                        break;
+                    case 'left':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'down';
+                        break;
+                    case 'right':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'up';
+                        break;
+                }
+                this.headElement.mtxLocal.translateY(1);
             }
         }
 
-        private moveUpOrDownAndSetDirection(y : number, direction : string) : void {
+        private moveRight() : void {
             if(!this.isDead) {
-                this.headElement.mtxLocal.translateY(y);
-                this.setHeadDirection(direction);
+                switch (this.headDirection) {
+                    case 'up':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'right';
+                        break;
+                    case 'down':
+                        this.headElement.mtxLocal.rotateZ(-90);
+                        this.headDirection = 'right';
+                        break;
+                    case 'left':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'up';
+                        break;
+                    case 'right':
+                        this.headElement.mtxLocal.rotateZ(-90);
+                        this.headDirection = 'down';
+                        break;
+                }
+                this.headElement.mtxLocal.translateY(1);
             }
         }
 
         private moveChildrenElements() : void {
             let translations : f.Vector3[] = [];
+            let rotations : f.Vector3[] = [];
             for (let i: number = 1; i < this.snakeChildren.length; i++) {
                 this.snakeChildren.forEach((child) => {
+                    rotations.push(child.mtxLocal.rotation);
                     translations.push(child.mtxLocal.translation);
                 });
+                this.snakeChildren[i].mtxLocal.rotation = rotations[i - 1];
                 this.snakeChildren[i].mtxLocal.translation = translations[i - 1];
             }
         }

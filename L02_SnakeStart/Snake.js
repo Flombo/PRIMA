@@ -7,10 +7,33 @@ var L02_SnakeStart;
             super("Snake");
             this.headDirection = 'right';
             this.isDead = false;
-            this.snakeSegmentMesh = new f.MeshQuad();
+            this.snakeSegmentMesh = new f.MeshCube();
             this.snakeSegmentMaterial = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
-            this.initSnake(2);
+            this.initSnake(1);
             this.collisionChecker = new L02_SnakeStart.CollisionChecker(this, wallsegments, collectibleElements, collectibles);
+            this.initCameraEgo();
+            this.initCameraMirror();
+        }
+        initCameraMirror() {
+            this.cameraMirror = new f.ComponentCamera();
+            this.cameraMirror.backgroundColor = f.Color.CSS("grey");
+            this.cameraMirror.pivot.translateZ(15);
+            this.cameraMirror.pivot.rotateY(180);
+        }
+        initCameraEgo() {
+            this.componentCamera = new f.ComponentCamera();
+            this.componentCamera.backgroundColor = f.Color.CSS('lightblue');
+            this.componentCamera.pivot.rotateY(90);
+            this.componentCamera.pivot.rotateZ(90);
+            this.componentCamera.pivot.rotateY(90);
+            this.componentCamera.pivot.translateZ(-1);
+            this.headElement.addComponent(this.componentCamera);
+        }
+        getCameraForMirror() {
+            return this.cameraMirror;
+        }
+        getCamera() {
+            return this.componentCamera;
         }
         checkCollisions() {
             this.collisionChecker.checkCollision();
@@ -23,16 +46,7 @@ var L02_SnakeStart;
             return this.isDead;
         }
         displayScorePrompt() {
-            this.animateDeath();
             this.collisionChecker.displayScorePrompt();
-        }
-        animateDeath() {
-            for (let i = 1; i < this.snakeChildren.length; i++) {
-                this.headElement.mtxLocal.rotateZ(30 * i);
-                this.snakeChildren[i].mtxLocal.rotateZ(30 * i);
-                this.headElement.mtxLocal.translateZ(i);
-                this.snakeChildren[i].mtxLocal.translateZ(i);
-            }
         }
         getHeadElement() {
             return this.headElement;
@@ -50,9 +64,6 @@ var L02_SnakeStart;
             this.appendChild(snakeSegment);
             this.snakeChildren.push(snakeSegment);
         }
-        setHeadDirection(direction) {
-            this.headDirection = direction;
-        }
         initSnake(value) {
             this.initSnakeELements(value);
             this.snakeChildren = this.getChildren();
@@ -62,12 +73,6 @@ var L02_SnakeStart;
         keyDownHandler(event) {
             if (!this.isDead) {
                 switch (event.key) {
-                    case f.KEYBOARD_CODE.ARROW_UP:
-                        this.moveHeadUp();
-                        break;
-                    case f.KEYBOARD_CODE.ARROW_DOWN:
-                        this.moveHeadDown();
-                        break;
                     case f.KEYBOARD_CODE.ARROW_LEFT:
                         this.moveHeadLeft();
                         break;
@@ -101,60 +106,73 @@ var L02_SnakeStart;
         }
         moveAll() {
             if (!this.isDead) {
-                switch (this.headDirection) {
-                    case 'right':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateX(1);
-                        break;
-                    case 'left':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateX(-1);
-                        break;
-                    case 'up':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateY(1);
-                        break;
-                    case 'down':
-                        this.moveChildrenElements();
-                        this.headElement.mtxLocal.translateY(-1);
-                        break;
-                }
+                this.moveChildrenElements();
+                this.headElement.mtxLocal.translateY(1);
             }
         }
         moveHeadLeft() {
             this.moveChildrenElements();
-            this.moveRightOrLeftAndSetDirection(-1, 'left');
+            this.moveLeft();
         }
         moveHeadRight() {
             this.moveChildrenElements();
-            this.moveRightOrLeftAndSetDirection(1, 'right');
+            this.moveRight();
         }
-        moveHeadUp() {
-            this.moveChildrenElements();
-            this.moveUpOrDownAndSetDirection(1, 'up');
-        }
-        moveHeadDown() {
-            this.moveChildrenElements();
-            this.moveUpOrDownAndSetDirection(-1, 'down');
-        }
-        moveRightOrLeftAndSetDirection(x, direction) {
+        moveLeft() {
             if (!this.isDead) {
-                this.headElement.mtxLocal.translateX(x);
-                this.setHeadDirection(direction);
+                switch (this.headDirection) {
+                    case 'up':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'left';
+                        break;
+                    case 'down':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'left';
+                        break;
+                    case 'left':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'down';
+                        break;
+                    case 'right':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'up';
+                        break;
+                }
+                this.headElement.mtxLocal.translateY(1);
             }
         }
-        moveUpOrDownAndSetDirection(y, direction) {
+        moveRight() {
             if (!this.isDead) {
-                this.headElement.mtxLocal.translateY(y);
-                this.setHeadDirection(direction);
+                switch (this.headDirection) {
+                    case 'up':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'right';
+                        break;
+                    case 'down':
+                        this.headElement.mtxLocal.rotateZ(-90);
+                        this.headDirection = 'right';
+                        break;
+                    case 'left':
+                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headDirection = 'up';
+                        break;
+                    case 'right':
+                        this.headElement.mtxLocal.rotateZ(-90);
+                        this.headDirection = 'down';
+                        break;
+                }
+                this.headElement.mtxLocal.translateY(1);
             }
         }
         moveChildrenElements() {
             let translations = [];
+            let rotations = [];
             for (let i = 1; i < this.snakeChildren.length; i++) {
                 this.snakeChildren.forEach((child) => {
+                    rotations.push(child.mtxLocal.rotation);
                     translations.push(child.mtxLocal.translation);
                 });
+                this.snakeChildren[i].mtxLocal.rotation = rotations[i - 1];
                 this.snakeChildren[i].mtxLocal.translation = translations[i - 1];
             }
         }

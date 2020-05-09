@@ -21,26 +21,50 @@ namespace L02_SnakeStart {
 		root.appendChild(walls);
 		root.appendChild(snake);
 
-		let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-		cmpCamera.backgroundColor = f.Color.CSS("lavender");
-		cmpCamera.pivot.translateZ(15);
-		cmpCamera.pivot.rotateY(180);
+		let light : f.LightAmbient = new f.LightAmbient(f.Color.CSS('orange'));
+		let lightComponent : f.ComponentLight = new f.ComponentLight(light);
+		let lightNode : f.Node = new f.Node("light");
+		lightNode.addComponent(lightComponent);
+
+
+		root.appendChild(lightNode);
 
 		let viewport : f.Viewport = new f.Viewport();
-		viewport.initialize("Viewport", root, cmpCamera, canvas);
+		viewport.initialize("Viewport", root,snake.getCamera(), canvas);
 
-		f.Loop.start(f.LOOP_MODE.TIME_REAL, 3);
+		let canvasMirror : HTMLCanvasElement = document.createElement('canvas');
+		canvasMirror.setAttribute("style",
+			"width:" + (window.innerWidth / 5)
+			+ "px; height:" + (window.innerHeight / 5) + "px;"
+			+ "z-index:" + 999999 +";"
+			+ "position: absolute;"
+			+ "left: 75%;"
+			+ "border: 5px solid orange;"
+			+ "border-radius: 100px;"
+		);
+
+		document.body.appendChild(canvasMirror);
+
+		let viewportMini : f.Viewport = new f.Viewport();
+		viewportMini.initialize("ViewportMini", root, snake.getCameraForMirror(), canvasMirror);
+
+		f.Loop.start(f.LOOP_MODE.TIME_REAL, 2);
 		f.Loop.addEventListener("loopFrame", renderLoop);
+
+		function moveLoop() {
+			if (!snake.getIsDead()) {
+				snake.checkCollisions();
+				snake.moveAll();
+			} else {
+				snake.displayScorePrompt();
+			}
+		}
 
 		function renderLoop () {
 			if (snake !== undefined && snake !== null) {
-				if(!snake.getIsDead()) {
-					snake.checkCollisions();
-					snake.moveAll();
-				} else {
-					snake.displayScorePrompt();
-				}
+				moveLoop();
 				viewport.draw();
+				viewportMini.draw();
 			}
 		}
 
