@@ -11,7 +11,7 @@ namespace L02_SnakeStart {
 			super("Collectables");
 			this.collectibleMesh = new f.MeshSphere();
 			this.collectibleMaterial = new f.Material(
-				"SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("darkblue"))
+				"SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("orange"))
 			);
 			this.initCollectibleElement();
 		}
