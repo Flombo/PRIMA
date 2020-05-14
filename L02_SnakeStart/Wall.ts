@@ -34,53 +34,30 @@ namespace L02_SnakeStart{
 		}
 
 		private initTopWall() : void {
-			let wallSegment = new f.Node("WallSegment");
-			let cmpMesh = new f.ComponentMesh(this.wallMesh);
-			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
-			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(1);
-			cmpMesh.pivot.scaleX(20);
-			cmpMesh.pivot.scaleZ(3);
-			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(0, 4, 0))));
-			wallSegment.addComponent(wallComponentMaterial);
-			this.appendChild(wallSegment);
+			this.buildWallSegment(20, 1, 3, 0, 5, 0);
 		}
 
 		private initBottomWall() : void {
-			let wallSegment = new f.Node("WallSegment");
-			let cmpMesh = new f.ComponentMesh(this.wallMesh);
-			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
-			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(1);
-			cmpMesh.pivot.scaleX(20);
-			cmpMesh.pivot.scaleZ(3);
-			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(0, -4, 0))));
-			wallSegment.addComponent(wallComponentMaterial);
-			this.appendChild(wallSegment);
+			this.buildWallSegment(20, 1, 3, 0, -5, 0);
 		}
 
 		private initLeftWall() : void{
-			let wallSegment = new f.Node("WallSegment");
-			let cmpMesh = new f.ComponentMesh(this.wallMesh);
-			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
-			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(1);
-			cmpMesh.pivot.scaleZ(3);
-			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(-8, 4, 0))));
-			wallSegment.addComponent(wallComponentMaterial);
-			this.appendChild(wallSegment);
+			this.buildWallSegment(1, 20, 3, -9, 5, 0);
 		}
 
 		private initRightWall() : void{
+			this.buildWallSegment(1, 20, 3, 9, 5, 0);
+		}
+
+		private buildWallSegment(scaleX : number, scaleY : number, scaleZ : number, x : number, y : number, z : number) : void{
 			let wallSegment = new f.Node("WallSegment");
 			let cmpMesh = new f.ComponentMesh(this.wallMesh);
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);
-			cmpMesh.pivot.scaleY(20);
-			cmpMesh.pivot.scaleX(1);
-			cmpMesh.pivot.scaleZ(3);
-			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(8, 4, 0))));
+			cmpMesh.pivot.scaleY(scaleY);
+			cmpMesh.pivot.scaleX(scaleX);
+			cmpMesh.pivot.scaleZ(scaleZ);
+			wallSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(x, y, z))));
 			wallSegment.addComponent(wallComponentMaterial);
 			this.appendChild(wallSegment);
 		}

@@ -27,6 +27,7 @@ var L02_SnakeStart;
             this.componentCamera.pivot.rotateZ(90);
             this.componentCamera.pivot.rotateY(90);
             this.componentCamera.pivot.translateZ(-1);
+            this.componentCamera.pivot.translateY(-0.2);
             this.headElement.addComponent(this.componentCamera);
         }
         getCameraForMirror() {
@@ -90,12 +91,12 @@ var L02_SnakeStart;
                 let cmpMesh = new f.ComponentMesh(this.snakeSegmentMesh);
                 snakeSegment.addComponent(cmpMesh);
                 cmpMesh.pivot.scale(f.Vector3.ONE(0.5));
-                this.checkIfHead(this.snakeSegmentMaterial, headComponentMaterialNew, snakeSegment, i);
+                Snake.checkIfHead(this.snakeSegmentMaterial, headComponentMaterialNew, snakeSegment, i);
                 snakeSegment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(-0.8 * i, 0, 0))));
                 this.appendChild(snakeSegment);
             }
         }
-        checkIfHead(segmentMaterial, headComponentMaterial, snakeSegment, i) {
+        static checkIfHead(segmentMaterial, headComponentMaterial, snakeSegment, i) {
             if (i !== 0) {
                 let cmpMaterial = new f.ComponentMaterial(segmentMaterial);
                 snakeSegment.addComponent(cmpMaterial);

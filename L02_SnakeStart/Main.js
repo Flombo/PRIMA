@@ -48,8 +48,7 @@ var L02_SnakeStart;
             + "z-index:" + 999999 + ";"
             + "position: absolute;"
             + "left: 75%;"
-            + "border: 5px solid orange;"
-            + "border-radius: 100px;");
+            + "border: 5px solid orange;");
         document.body.appendChild(canvasMirror);
         let viewportMini = new f.Viewport();
         viewportMini.initialize("ViewportMini", snake, snake.getCameraForMirror(), canvasMirror);

@@ -67,7 +67,6 @@ namespace L02_SnakeStart {
 			+ "position: absolute;"
 			+ "left: 75%;"
 			+ "border: 5px solid orange;"
-			+ "border-radius: 100px;"
 		);
 
 		document.body.appendChild(canvasMirror);
