@@ -6,6 +6,8 @@ namespace L02_SnakeStart {
 		
 		private cameraMirror: FudgeCore.ComponentCamera;
 		private componentCamera: FudgeCore.ComponentCamera;
+		private buttonLeft : HTMLButtonElement;
+		private buttonRight : HTMLButtonElement;
 
 		constructor(
 			wallSegments : f.Node[],
@@ -16,7 +18,22 @@ namespace L02_SnakeStart {
 			super(wallSegments, obstacleSegments, collectibleElements, collectibles);
 			this.initCameraEgo();
 			this.initCameraMirror();
+			this.buttonLeft = <HTMLButtonElement>document.getElementById("left");
+			this.buttonRight = <HTMLButtonElement>document.getElementById("right");
+			this.initButtonHandler();
 			window.addEventListener("keydown", (event) => { this.keyDownHandler(event); });
+		}
+
+		private initButtonHandler() : void {
+			this.buttonRight.addEventListener("mousedown", (event)=>{
+				event.preventDefault();
+				this.moveHeadRight();
+			})
+
+			this.buttonLeft.addEventListener("mousedown", ()=>{
+				event.preventDefault();
+				this.moveHeadLeft();
+			})
 		}
 
 		private keyDownHandler(event : KeyboardEvent) : void {

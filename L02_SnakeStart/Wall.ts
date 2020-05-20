@@ -10,8 +10,7 @@ namespace L02_SnakeStart{
 		constructor() {
 			super("Wall");
 			this.wallMesh = new f.MeshCube();
-			let img : HTMLImageElement = document.createElement("img");
-			img.setAttribute("src", "./texture/brickwall.jpg");
+			let img : HTMLImageElement = <HTMLImageElement>document.getElementById("wall");
 			let textureIMG : f.TextureImage = new f.TextureImage();
 			textureIMG.image = img;
 			let wallTexture : f.CoatTextured = new f.CoatTextured();
@@ -34,19 +33,19 @@ namespace L02_SnakeStart{
 		}
 
 		private initTopWall() : void {
-			this.buildWallSegment(20, 1, 3, 0, 5, 0);
+			this.buildWallSegment(30, 1, 3, 0, 10, 0);
 		}
 
 		private initBottomWall() : void {
-			this.buildWallSegment(20, 1, 3, 0, -5, 0);
+			this.buildWallSegment(30, 1, 3, 0, -10, 0);
 		}
 
 		private initLeftWall() : void{
-			this.buildWallSegment(1, 20, 3, -9, 5, 0);
+			this.buildWallSegment(1, 35, 3, -15, 0, 0);
 		}
 
 		private initRightWall() : void{
-			this.buildWallSegment(1, 20, 3, 9, 5, 0);
+			this.buildWallSegment(1, 35, 3, 15, 0, 0);
 		}
 
 		private buildWallSegment(scaleX : number, scaleY : number, scaleZ : number, x : number, y : number, z : number) : void{

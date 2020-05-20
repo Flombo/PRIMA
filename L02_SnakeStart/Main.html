@@ -8,7 +8,10 @@
     <script src="./Fudge/FudgeCore.js"></script>
     <script src="Collectibles.js"></script>
     <script src="Wall.js"></script>
+    <script src="obstacle.js"></script>
     <script src="Snake.js"></script>
+    <script src="PlayerSnake.js"></script>
+    <script src="EnemySnake.js"></script>
     <script src="CollisionChecker.js"></script>
     <script src="Main.js"></script>
     <link rel="stylesheet" href="styles/test.css">
@@ -19,5 +22,12 @@
     <nav>Score : 0</nav>
 </header>
 <canvas></canvas>
+<canvas id="canvasMini"></canvas>
+<div class="buttonPanel">
+    <button id="left">Left</button>
+    <button id="right">Right</button>
+</div>
+<img id="ground" src="texture/gras.jpg" style="visibility: hidden">
+<img id="wall" src="texture/brickwall.jpg" style="visibility: hidden">
 </body>
 </html>

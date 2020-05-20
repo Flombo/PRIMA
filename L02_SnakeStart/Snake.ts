@@ -6,55 +6,27 @@ namespace L02_SnakeStart {
 
         private snakeChildren : f.Node[];
         private headDirection : string;
-        private headElement : f.Node;
-        private isDead : boolean;
+        protected headElement : f.Node;
+        protected isDead : boolean;
         private readonly snakeSegmentMesh : f.MeshCube;
         private readonly snakeSegmentMaterial : f.Material;
-        private collisionChecker : CollisionChecker;
-        private componentCamera : f.ComponentCamera;
-        private cameraMirror : f.ComponentCamera;
+        protected collisionChecker : CollisionChecker;
 
-        constructor(wallsegments : f.Node[], collectibleElements : f.Node[], collectibles : Collectibles) {
+        constructor(
+            wallsegments : f.Node[],
+            obstacleSegments : f.Node[],
+            collectibleElements : f.Node[],
+            collectibles : Collectibles
+        ) {
             super("Snake");
             this.headDirection = 'right';
             this.isDead = false;
             this.snakeSegmentMesh = new f.MeshCube();
             this.snakeSegmentMaterial = new f.Material(
-                "SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen"))
+                "SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("lightgreen"))
             );
-
-            this.initSnake(1);
-
-            this.collisionChecker = new CollisionChecker(this, wallsegments, collectibleElements, collectibles);
-            this.initCameraEgo();
-            this.initCameraMirror();
-        }
-
-        private initCameraMirror() : void {
-            this.cameraMirror = new f.ComponentCamera();
-            this.cameraMirror.backgroundColor = f.Color.CSS("grey");
-            this.cameraMirror.pivot.translateZ(15);
-            this.cameraMirror.pivot.rotateY(180);
-        }
-
-        private initCameraEgo() : void {
-            this.componentCamera = new f.ComponentCamera();
-            this.componentCamera.backgroundColor = f.Color.CSS('lightblue');
-            this.componentCamera.pivot.rotateY(90);
-            this.componentCamera.pivot.rotateZ(90);
-            this.componentCamera.pivot.rotateY(90);
-            this.componentCamera.pivot.translateZ(-1);
-            this.componentCamera.pivot.translateY(-0.2);
-
-            this.headElement.addComponent(this.componentCamera);
-        }
-
-        public getCameraForMirror() : f.ComponentCamera {
-            return this.cameraMirror;
-        }
-
-        public getCamera() : f.ComponentCamera {
-            return this.componentCamera;
+            this.initSnake(3);
+            this.collisionChecker = new CollisionChecker(this, wallsegments, obstacleSegments, collectibleElements, collectibles);
         }
 
         public checkCollisions() : void {
@@ -68,10 +40,6 @@ namespace L02_SnakeStart {
 
         public getIsDead() : boolean {
             return this.isDead;
-        }
-
-        public displayScorePrompt() : void {
-            this.collisionChecker.displayScorePrompt();
         }
 
         public getHeadElement() : f.Node {
@@ -100,24 +68,10 @@ namespace L02_SnakeStart {
             this.initSnakeELements(value);
             this.snakeChildren = this.getChildren();
             this.headElement = this.snakeChildren[0];
-            window.addEventListener("keydown", (event) => { this.keyDownHandler(event); });
-        }
-
-        private keyDownHandler(event : KeyboardEvent) : void {
-            if(!this.isDead) {
-                switch (event.key) {
-                    case f.KEYBOARD_CODE.ARROW_LEFT:
-                        this.moveHeadLeft();
-                        break;
-                    case f.KEYBOARD_CODE.ARROW_RIGHT:
-                        this.moveHeadRight();
-                        break;
-                }
-            }
         }
 
         private initSnakeELements(value : number) : void {
-            let headMaterial : f.Material = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("salmon")));
+            let headMaterial : f.Material = new f.Material("SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("salmon")));
             let headComponentMaterialNew : f.ComponentMaterial = new f.ComponentMaterial(headMaterial);
 
             for (let i: number = 0; i < value; i++) {
@@ -151,17 +105,7 @@ namespace L02_SnakeStart {
             }
         }
 
-        private moveHeadLeft() : void {
-            this.moveChildrenElements();
-            this.moveLeft();
-        }
-
-        private moveHeadRight() : void {
-            this.moveChildrenElements();
-            this.moveRight();
-        }
-
-        private moveLeft() : void {
+        protected moveHeadLeft() : void {
             if(!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
@@ -181,15 +125,14 @@ namespace L02_SnakeStart {
                         this.headDirection = 'up';
                         break;
                 }
-                this.headElement.mtxLocal.translateY(1);
             }
         }
 
-        private moveRight() : void {
+        protected moveHeadRight() : void {
             if(!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
-                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headElement.mtxLocal.rotateZ(-90);
                         this.headDirection = 'right';
                         break;
                     case 'down':
@@ -197,7 +140,7 @@ namespace L02_SnakeStart {
                         this.headDirection = 'right';
                         break;
                     case 'left':
-                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headElement.mtxLocal.rotateZ(-90);
                         this.headDirection = 'up';
                         break;
                     case 'right':
@@ -205,19 +148,15 @@ namespace L02_SnakeStart {
                         this.headDirection = 'down';
                         break;
                 }
-                this.headElement.mtxLocal.translateY(1);
             }
         }
 
         private moveChildrenElements() : void {
             let translations : f.Vector3[] = [];
-            let rotations : f.Vector3[] = [];
             for (let i: number = 1; i < this.snakeChildren.length; i++) {
                 this.snakeChildren.forEach((child) => {
-                    rotations.push(child.mtxLocal.rotation);
                     translations.push(child.mtxLocal.translation);
                 });
-                this.snakeChildren[i].mtxLocal.rotation = rotations[i - 1];
                 this.snakeChildren[i].mtxLocal.translation = translations[i - 1];
             }
         }

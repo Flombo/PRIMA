@@ -3,38 +3,14 @@ var L02_SnakeStart;
 (function (L02_SnakeStart) {
     var f = FudgeCore;
     class Snake extends f.Node {
-        constructor(wallsegments, collectibleElements, collectibles) {
+        constructor(wallsegments, obstacleSegments, collectibleElements, collectibles) {
             super("Snake");
             this.headDirection = 'right';
             this.isDead = false;
             this.snakeSegmentMesh = new f.MeshCube();
-            this.snakeSegmentMaterial = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("lightgreen")));
-            this.initSnake(1);
-            this.collisionChecker = new L02_SnakeStart.CollisionChecker(this, wallsegments, collectibleElements, collectibles);
-            this.initCameraEgo();
-            this.initCameraMirror();
-        }
-        initCameraMirror() {
-            this.cameraMirror = new f.ComponentCamera();
-            this.cameraMirror.backgroundColor = f.Color.CSS("grey");
-            this.cameraMirror.pivot.translateZ(15);
-            this.cameraMirror.pivot.rotateY(180);
-        }
-        initCameraEgo() {
-            this.componentCamera = new f.ComponentCamera();
-            this.componentCamera.backgroundColor = f.Color.CSS('lightblue');
-            this.componentCamera.pivot.rotateY(90);
-            this.componentCamera.pivot.rotateZ(90);
-            this.componentCamera.pivot.rotateY(90);
-            this.componentCamera.pivot.translateZ(-1);
-            this.componentCamera.pivot.translateY(-0.2);
-            this.headElement.addComponent(this.componentCamera);
-        }
-        getCameraForMirror() {
-            return this.cameraMirror;
-        }
-        getCamera() {
-            return this.componentCamera;
+            this.snakeSegmentMaterial = new f.Material("SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("lightgreen")));
+            this.initSnake(3);
+            this.collisionChecker = new L02_SnakeStart.CollisionChecker(this, wallsegments, obstacleSegments, collectibleElements, collectibles);
         }
         checkCollisions() {
             this.collisionChecker.checkCollision();
@@ -45,9 +21,6 @@ var L02_SnakeStart;
         }
         getIsDead() {
             return this.isDead;
-        }
-        displayScorePrompt() {
-            this.collisionChecker.displayScorePrompt();
         }
         getHeadElement() {
             return this.headElement;
@@ -69,22 +42,9 @@ var L02_SnakeStart;
             this.initSnakeELements(value);
             this.snakeChildren = this.getChildren();
             this.headElement = this.snakeChildren[0];
-            window.addEventListener("keydown", (event) => { this.keyDownHandler(event); });
-        }
-        keyDownHandler(event) {
-            if (!this.isDead) {
-                switch (event.key) {
-                    case f.KEYBOARD_CODE.ARROW_LEFT:
-                        this.moveHeadLeft();
-                        break;
-                    case f.KEYBOARD_CODE.ARROW_RIGHT:
-                        this.moveHeadRight();
-                        break;
-                }
-            }
         }
         initSnakeELements(value) {
-            let headMaterial = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("salmon")));
+            let headMaterial = new f.Material("SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("salmon")));
             let headComponentMaterialNew = new f.ComponentMaterial(headMaterial);
             for (let i = 0; i < value; i++) {
                 let snakeSegment = new f.Node("Quad");
@@ -112,14 +72,6 @@ var L02_SnakeStart;
             }
         }
         moveHeadLeft() {
-            this.moveChildrenElements();
-            this.moveLeft();
-        }
-        moveHeadRight() {
-            this.moveChildrenElements();
-            this.moveRight();
-        }
-        moveLeft() {
             if (!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
@@ -139,14 +91,13 @@ var L02_SnakeStart;
                         this.headDirection = 'up';
                         break;
                 }
-                this.headElement.mtxLocal.translateY(1);
             }
         }
-        moveRight() {
+        moveHeadRight() {
             if (!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
-                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headElement.mtxLocal.rotateZ(-90);
                         this.headDirection = 'right';
                         break;
                     case 'down':
@@ -154,7 +105,7 @@ var L02_SnakeStart;
                         this.headDirection = 'right';
                         break;
                     case 'left':
-                        this.headElement.mtxLocal.rotateZ(90);
+                        this.headElement.mtxLocal.rotateZ(-90);
                         this.headDirection = 'up';
                         break;
                     case 'right':
@@ -162,18 +113,14 @@ var L02_SnakeStart;
                         this.headDirection = 'down';
                         break;
                 }
-                this.headElement.mtxLocal.translateY(1);
             }
         }
         moveChildrenElements() {
             let translations = [];
-            let rotations = [];
             for (let i = 1; i < this.snakeChildren.length; i++) {
                 this.snakeChildren.forEach((child) => {
-                    rotations.push(child.mtxLocal.rotation);
                     translations.push(child.mtxLocal.translation);
                 });
-                this.snakeChildren[i].mtxLocal.rotation = rotations[i - 1];
                 this.snakeChildren[i].mtxLocal.translation = translations[i - 1];
             }
         }

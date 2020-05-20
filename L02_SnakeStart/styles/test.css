@@ -29,5 +29,23 @@ html body header .nav {
   max-width: 60%;
   padding: 0.5%;
 }
+html body .buttonPanel {
+  z-index: 10;
+  position: fixed;
+  bottom: 0;
+  left: 40vw;
+}
+html body .buttonPanel button {
+  border: 5px solid #202020;
+  border-radius: 10px;
+  width: 25vh;
+  height: 3vw;
+}
+html body .buttonPanel button:hover {
+  opacity: 50%;
+}
+html body .buttonPanel button:focus {
+  outline: none;
+}
 
 /*# sourceMappingURL=test.css.map */

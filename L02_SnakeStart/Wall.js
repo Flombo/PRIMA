@@ -6,8 +6,7 @@ var L02_SnakeStart;
         constructor() {
             super("Wall");
             this.wallMesh = new f.MeshCube();
-            let img = document.createElement("img");
-            img.setAttribute("src", "./texture/brickwall.jpg");
+            let img = document.getElementById("wall");
             let textureIMG = new f.TextureImage();
             textureIMG.image = img;
             let wallTexture = new f.CoatTextured();
@@ -25,16 +24,16 @@ var L02_SnakeStart;
             return this.getChildren();
         }
         initTopWall() {
-            this.buildWallSegment(20, 1, 3, 0, 5, 0);
+            this.buildWallSegment(30, 1, 3, 0, 10, 0);
         }
         initBottomWall() {
-            this.buildWallSegment(20, 1, 3, 0, -5, 0);
+            this.buildWallSegment(30, 1, 3, 0, -10, 0);
         }
         initLeftWall() {
-            this.buildWallSegment(1, 20, 3, -9, 5, 0);
+            this.buildWallSegment(1, 35, 3, -15, 0, 0);
         }
         initRightWall() {
-            this.buildWallSegment(1, 20, 3, 9, 5, 0);
+            this.buildWallSegment(1, 35, 3, 15, 0, 0);
         }
         buildWallSegment(scaleX, scaleY, scaleZ, x, y, z) {
             let wallSegment = new f.Node("WallSegment");

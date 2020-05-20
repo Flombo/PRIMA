@@ -7,7 +7,20 @@ var L02_SnakeStart;
             super(wallSegments, obstacleSegments, collectibleElements, collectibles);
             this.initCameraEgo();
             this.initCameraMirror();
+            this.buttonLeft = document.getElementById("left");
+            this.buttonRight = document.getElementById("right");
+            this.initButtonHandler();
             window.addEventListener("keydown", (event) => { this.keyDownHandler(event); });
+        }
+        initButtonHandler() {
+            this.buttonRight.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this.moveHeadRight();
+            });
+            this.buttonLeft.addEventListener("mousedown", () => {
+                event.preventDefault();
+                this.moveHeadLeft();
+            });
         }
         keyDownHandler(event) {
             if (!this.isDead) {

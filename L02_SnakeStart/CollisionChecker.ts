@@ -5,6 +5,7 @@ namespace L02_SnakeStart{
 	export class CollisionChecker{
 
 		private wallSegments : f.Node[];
+		private obstacleSegments : f.Node[];
 		private collectibles : f.Node[];
 		private snakeHead : f.Node;
 		private snake : Snake;
@@ -15,10 +16,11 @@ namespace L02_SnakeStart{
 		private collisionSound : HTMLAudioElement;
 		private collectSound : HTMLAudioElement;
 
-		constructor(snake : Snake, wallSegments : f.Node[], collectibles : f.Node[], collectibleClass : Collectibles) {
+		constructor(snake : Snake, wallSegments : f.Node[], obstacleSegments : f.Node[], collectibles : f.Node[], collectibleClass : Collectibles) {
 			this.snake = snake;
 			this.snakeHead = snake.getHeadElement();
 			this.wallSegments = wallSegments;
+			this.obstacleSegments = obstacleSegments;
 			this.collectibles = collectibles;
 			this.collectibleClass = collectibleClass;
 			this.nav = document.getElementsByTagName("nav")[0];
@@ -31,13 +33,16 @@ namespace L02_SnakeStart{
 		public checkCollision() : void {
 			this.checkSnakeSegmentCollision();
 			this.checkWallCollision();
+			this.checkObstacleCollision();
 			this.checkCollectibleCollision();
 		}
 
 		private checkSnakeSegmentCollision() : void {
 			let snakeSegments : f.Node[] = this.snake.getChildren();
 			for(let i : number = 1; i < snakeSegments.length; i++){
-				this.checkSnakeSegment(snakeSegments[i]);
+				if(this.snake instanceof PlayerSnake) {
+					this.checkSnakeSegment(snakeSegments[i]);
+				}
 			}
 		}
 
@@ -59,9 +64,29 @@ namespace L02_SnakeStart{
 			});
 		}
 
+		private checkObstacleCollision() : void {
+			this.obstacleSegments.forEach((obstacle) => {
+				if(this.snake instanceof PlayerSnake) {
+					this.checkObstacle(obstacle);
+				}
+			})
+		}
+
+		private checkObstacle(obstacle : f.Node) : void {
+			if(
+				Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(obstacle.mtxLocal.translation.x)
+				&& Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(obstacle.mtxLocal.translation.y)
+			) {
+				this.collisionSound.play();
+				this.snake.setIsDeadTrue();
+			}
+		}
+
 		private checkWallCollision() : void {
 			this.wallSegments.forEach((wallSegment) => {
-				this.checkWallSegment(wallSegment);
+				if(this.snake instanceof PlayerSnake) {
+					this.checkWallSegment(wallSegment);
+				}
 			});
 		}
 
@@ -71,7 +96,7 @@ namespace L02_SnakeStart{
 				&& Math.round(snakeElement.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)
 			){
 				element.getParent().removeChild(element);
-				this.collectibleClass.initCollectibleElement();
+				this.collectibleClass.initCollectibleElement(1);
 				this.collectibles = this.collectibleClass.getCollectibleElements();
 				this.score++;
 				this.nav.innerText = "Score : " + this.score;

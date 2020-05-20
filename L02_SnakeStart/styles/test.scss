@@ -31,5 +31,23 @@ html{
                 padding: 0.5%;
             }
         }
+        .buttonPanel{
+            z-index: 10;
+            position: fixed;
+            bottom: 0;
+            left: 40vw;
+            button{
+                border: 5px solid #202020;
+                border-radius: 10px;
+                width: 25vh;
+                height: 3vw;
+                &:hover{
+                    opacity: 50%;
+                }
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
     }
 }

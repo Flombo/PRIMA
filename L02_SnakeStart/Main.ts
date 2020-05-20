@@ -7,7 +7,7 @@ namespace L02_SnakeStart {
 
 	function hndLoad(_event: Event): void {
 		let canvas: HTMLCanvasElement = document.querySelector("canvas");
-		canvas.setAttribute("style", "width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
+		canvas.setAttribute("style", "z-index: 90;  width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
 		f.RenderManager.initialize(true, true);
 		let root : f.Node = new f.Node("root");
 
@@ -15,11 +15,9 @@ namespace L02_SnakeStart {
 
 		let groundMesh : f.MeshQuad = new f.MeshQuad();
 		let groundMeshComp : f.ComponentMesh = new f.ComponentMesh(groundMesh);
-		groundMeshComp.pivot.scaleY(20);
-		groundMeshComp.pivot.scaleX(20);
-
-		let grasIMG : HTMLImageElement = document.createElement("img");
-		grasIMG.setAttribute("src", "./texture/gras.jpg");
+		groundMeshComp.pivot.scaleY(30);
+		groundMeshComp.pivot.scaleX(30);
+		let grasIMG : HTMLImageElement = <HTMLImageElement>document.getElementById("ground");
 		let grastextureImage : f.TextureImage = new f.TextureImage();
 		grastextureImage.image = grasIMG;
 		let groundTextureCoat : f.CoatTextured = new f.CoatTextured();
@@ -36,60 +34,81 @@ namespace L02_SnakeStart {
 
 		root.appendChild(groundNode);
 
-
-		let collectibles : Collectibles = new Collectibles();
-
 		let walls : Wall = new Wall();
 
-		let snake : Snake = new Snake(walls.getWallElements(), collectibles.getCollectibleElements(), collectibles);
+		let obstacle : Obstacle = new Obstacle();
+
+		let collectibles : Collectibles = new Collectibles(obstacle.getObstacleElements());
+
+		let playerSnake : PlayerSnake = new PlayerSnake(
+			walls.getWallElements(),
+			obstacle.getObstacleElements(),
+			collectibles.getCollectibleElements(),
+			collectibles
+		);
+
+		let enemySnake : EnemySnake = new EnemySnake(
+			walls.getWallElements(),
+			obstacle.getObstacleElements(),
+			collectibles.getCollectibleElements(),
+			collectibles
+		);
 
 		root.appendChild(collectibles);
 		root.appendChild(walls);
-		root.appendChild(snake);
+		root.appendChild(obstacle);
+		root.appendChild(playerSnake);
+		root.appendChild(enemySnake);
 
-		let light : f.LightAmbient = new f.LightAmbient(f.Color.CSS('orange'));
+		let light : f.LightAmbient = new f.LightAmbient(new f.Color(1, 1, 0.5, 0.1));
+		let directionalLight : f.LightDirectional = new f.LightDirectional(f.Color.CSS('white'));
+		let directionalLightComp : f.ComponentLight = new f.ComponentLight(directionalLight);
+		directionalLightComp.pivot.translateZ(10);
+		directionalLightComp.pivot.lookAt(playerSnake.getHeadElement().mtxLocal.translation);
 		let lightComponent : f.ComponentLight = new f.ComponentLight(light);
 		let lightNode : f.Node = new f.Node("light");
-		lightNode.activate(true);
 		lightNode.addComponent(lightComponent);
+		lightNode.addComponent(directionalLightComp);
 
 
 		root.appendChild(lightNode);
 
 		let viewport : f.Viewport = new f.Viewport();
-		viewport.initialize("Viewport", root,snake.getCamera(), canvas);
+		viewport.initialize("Viewport", root, playerSnake.getCamera(), canvas);
 
-		let canvasMirror : HTMLCanvasElement = document.createElement('canvas');
+		let canvasMirror : HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('canvasMini');
 		canvasMirror.setAttribute("style",
 			"width:" + (window.innerWidth / 7)
 			+ "px; height:" + (window.innerHeight / 7) + "px;"
 			+ "z-index:" + 999999 +";"
 			+ "position: absolute;"
 			+ "left: 75%;"
+			+ "top: 0;"
 			+ "border: 5px solid orange;"
 		);
 
 		document.body.appendChild(canvasMirror);
 
 		let viewportMini : f.Viewport = new f.Viewport();
-		viewportMini.initialize("ViewportMini", snake, snake.getCameraForMirror(), canvasMirror);
-
-		f.Loop.start(f.LOOP_MODE.TIME_REAL, 2);
+		viewportMini.initialize("viewportMini", playerSnake, playerSnake.getCameraForMirror(), canvasMirror);
+		f.Loop.start(f.LOOP_MODE.TIME_GAME, 3);
 		f.Loop.addEventListener("loopFrame", renderLoop);
 
 		function moveLoop() {
-			if (!snake.getIsDead()) {
-				snake.checkCollisions();
-				snake.moveAll();
+			if (!playerSnake.getIsDead()) {
+				playerSnake.checkCollisions();
+				playerSnake.moveAll();
+				// enemySnake.checkCollisions();
+				// enemySnake.moveAll();
 			} else {
-				snake.displayScorePrompt();
+				playerSnake.displayScorePrompt();
 			}
 		}
 
 		function renderLoop () {
-			if (snake !== undefined && snake !== null) {
-				moveLoop();
+			if (playerSnake !== undefined && playerSnake !== null) {
 				viewport.draw();
+				moveLoop();
 				viewportMini.draw();
 			}
 		}
