@@ -38,8 +38,8 @@ html body .buttonPanel {
 html body .buttonPanel button {
   border: 5px solid #202020;
   border-radius: 10px;
-  width: 25vh;
-  height: 3vw;
+  width: 200px;
+  height: 150px;
 }
 html body .buttonPanel button:hover {
   opacity: 50%;
