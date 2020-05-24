@@ -8,7 +8,14 @@ var L02_SnakeStart;
             this.obstacleElements = obstacleElments;
             this.collectibleMesh = new f.MeshSphere();
             this.collectibleMaterial = new f.Material("SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("orange")));
-            this.initCollectibleElement(4);
+            this.shadowMesh = new f.MeshQuad();
+            let shadowIMG = document.getElementById("shadow");
+            let textureIMG = new f.TextureImage();
+            textureIMG.image = shadowIMG;
+            let textureCoat = new f.CoatTextured();
+            textureCoat.texture = textureIMG;
+            this.shadowMaterial = new f.Material("Shaow", f.ShaderTexture, textureCoat);
+            this.initCollectibleElement(3);
         }
         getCollectibleElements() {
             return this.getChildren();
@@ -39,13 +46,26 @@ var L02_SnakeStart;
             for (let i = 0; i < amount; i++) {
                 let collectibleElement = new f.Node("collectibleElement");
                 let cmpMesh = new f.ComponentMesh(this.collectibleMesh);
-                let wallComponentMaterial = new f.ComponentMaterial(this.collectibleMaterial);
+                let componentMaterial = new f.ComponentMaterial(this.collectibleMaterial);
                 collectibleElement.addComponent(cmpMesh);
                 cmpMesh.pivot.scale(f.Vector3.ONE(0.5));
-                collectibleElement.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(this.getRandomX([14, -14]), this.getRandomY([8, -8]), 0))));
-                collectibleElement.addComponent(wallComponentMaterial);
+                let x = this.getRandomX([11, -11]);
+                let y = this.getRandomY([7, -7]);
+                collectibleElement.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(x, y, 0))));
+                collectibleElement.addComponent(componentMaterial);
+                this.initShadowELement(x, y);
                 this.appendChild(collectibleElement);
             }
+        }
+        initShadowELement(x, y) {
+            let shadowNode = new f.Node("Shadow");
+            let shadowCmpMesh = new f.ComponentMesh(this.shadowMesh);
+            let shadowMaterialComp = new f.ComponentMaterial(this.shadowMaterial);
+            shadowNode.addComponent(shadowCmpMesh);
+            shadowNode.addComponent(shadowMaterialComp);
+            shadowCmpMesh.pivot.scale(f.Vector3.ONE(0.5));
+            shadowNode.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(x, y, -1))));
+            this.appendChild(shadowNode);
         }
     }
     L02_SnakeStart.Collectibles = Collectibles;

@@ -33,23 +33,31 @@ namespace L02_SnakeStart{
 		}
 
 		private initTopWall() : void {
-			this.buildWallSegment(30, 1, 3, 0, 10, 0);
+			this.buildWallSegment(35, 1, 3, 0, 10, 0, "top");
 		}
 
 		private initBottomWall() : void {
-			this.buildWallSegment(30, 1, 3, 0, -10, 0);
+			this.buildWallSegment(35, 1, 3, 0, -10, 0, "bottom");
 		}
 
 		private initLeftWall() : void{
-			this.buildWallSegment(1, 35, 3, -15, 0, 0);
+			this.buildWallSegment(1, 35, 3, -15, 0, 0, "left");
 		}
 
 		private initRightWall() : void{
-			this.buildWallSegment(1, 35, 3, 15, 0, 0);
+			this.buildWallSegment(1, 35, 3, 15, 0, 0, "right");
 		}
 
-		private buildWallSegment(scaleX : number, scaleY : number, scaleZ : number, x : number, y : number, z : number) : void{
-			let wallSegment = new f.Node("WallSegment");
+		private buildWallSegment(
+			scaleX : number,
+			scaleY : number,
+			scaleZ : number,
+			x : number,
+			y : number,
+			z : number,
+			name : string
+		) : void{
+			let wallSegment = new f.Node(name);
 			let cmpMesh = new f.ComponentMesh(this.wallMesh);
 			let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
 			wallSegment.addComponent(cmpMesh);

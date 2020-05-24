@@ -19,7 +19,7 @@ namespace L02_SnakeStart {
             collectibles : Collectibles
         ) {
             super("Snake");
-            this.headDirection = 'right';
+            this.headDirection = 'down';
             this.isDead = false;
             this.snakeSegmentMesh = new f.MeshCube();
             this.snakeSegmentMaterial = new f.Material(
@@ -27,6 +27,14 @@ namespace L02_SnakeStart {
             );
             this.initSnake(3);
             this.collisionChecker = new CollisionChecker(this, wallsegments, obstacleSegments, collectibleElements, collectibles);
+        }
+
+        public setHeadDirection(direction : string) : void {
+        	this.headDirection = direction;
+		}
+
+		public getHeadDirection() : string {
+            return this.headDirection;
         }
 
         public checkCollisions() : void {
@@ -105,7 +113,7 @@ namespace L02_SnakeStart {
             }
         }
 
-        protected moveHeadLeft() : void {
+        public moveHeadLeft() : void {
             if(!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
@@ -128,7 +136,7 @@ namespace L02_SnakeStart {
             }
         }
 
-        protected moveHeadRight() : void {
+        public moveHeadRight() : void {
             if(!this.isDead) {
                 switch (this.headDirection) {
                     case 'up':
@@ -148,6 +156,74 @@ namespace L02_SnakeStart {
                         this.headDirection = 'down';
                         break;
                 }
+            }
+        }
+
+        public turnDown() : void {
+            switch (this.getHeadDirection()) {
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'down';
+                    break;
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'down';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'down';
+                    break;
+            }
+        }
+
+        public turnUp() : void {
+            switch (this.getHeadDirection()) {
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'up';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'up';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'up';
+                    break;
+            }
+        }
+
+        public turnRight() : void {
+            switch (this.getHeadDirection()) {
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'right';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'right';
+                    break;
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'right';
+                    break;
+            }
+        }
+
+        public turnLeft() : void {
+            switch (this.getHeadDirection()) {
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'left';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'left';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'left';
+                    break;
             }
         }
 

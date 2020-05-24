@@ -90,16 +90,15 @@ namespace L02_SnakeStart {
 		document.body.appendChild(canvasMirror);
 
 		let viewportMini : f.Viewport = new f.Viewport();
-		viewportMini.initialize("viewportMini", playerSnake, playerSnake.getCameraForMirror(), canvasMirror);
+		viewportMini.initialize("viewportMini", root, playerSnake.getCameraForMirror(), canvasMirror);
 		f.Loop.start(f.LOOP_MODE.TIME_GAME, 3);
 		f.Loop.addEventListener("loopFrame", renderLoop);
 
 		function moveLoop() {
 			if (!playerSnake.getIsDead()) {
-				playerSnake.checkCollisions();
-				playerSnake.moveAll();
-				// enemySnake.checkCollisions();
-				// enemySnake.moveAll();
+				// playerSnake.checkCollisions();
+				// playerSnake.moveAll();
+				enemySnake.checkCollisions();
 			} else {
 				playerSnake.displayScorePrompt();
 			}

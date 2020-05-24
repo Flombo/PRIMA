@@ -5,12 +5,18 @@ var L02_SnakeStart;
     class Snake extends f.Node {
         constructor(wallsegments, obstacleSegments, collectibleElements, collectibles) {
             super("Snake");
-            this.headDirection = 'right';
+            this.headDirection = 'down';
             this.isDead = false;
             this.snakeSegmentMesh = new f.MeshCube();
             this.snakeSegmentMaterial = new f.Material("SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("lightgreen")));
             this.initSnake(3);
             this.collisionChecker = new L02_SnakeStart.CollisionChecker(this, wallsegments, obstacleSegments, collectibleElements, collectibles);
+        }
+        setHeadDirection(direction) {
+            this.headDirection = direction;
+        }
+        getHeadDirection() {
+            return this.headDirection;
         }
         checkCollisions() {
             this.collisionChecker.checkCollision();
@@ -113,6 +119,70 @@ var L02_SnakeStart;
                         this.headDirection = 'down';
                         break;
                 }
+            }
+        }
+        turnDown() {
+            switch (this.getHeadDirection()) {
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'down';
+                    break;
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'down';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'down';
+                    break;
+            }
+        }
+        turnUp() {
+            switch (this.getHeadDirection()) {
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'up';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'up';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'up';
+                    break;
+            }
+        }
+        turnRight() {
+            switch (this.getHeadDirection()) {
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'right';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'right';
+                    break;
+                case 'left':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'right';
+                    break;
+            }
+        }
+        turnLeft() {
+            switch (this.getHeadDirection()) {
+                case 'up':
+                    this.headElement.mtxLocal.rotateZ(90);
+                    this.headDirection = 'left';
+                    break;
+                case 'down':
+                    this.headElement.mtxLocal.rotateZ(-90);
+                    this.headDirection = 'left';
+                    break;
+                case 'right':
+                    this.headElement.mtxLocal.rotateZ(180);
+                    this.headDirection = 'left';
+                    break;
             }
         }
         moveChildrenElements() {

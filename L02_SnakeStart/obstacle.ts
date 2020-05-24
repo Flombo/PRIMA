@@ -1,4 +1,4 @@
-namespace L02_SnakeStart{
+namespace L02_SnakeStart {
 
 	import f = FudgeCore;
 
@@ -27,15 +27,13 @@ namespace L02_SnakeStart{
 
 		private getRandomPosition(range : number[]) : number {
 			let index = Math.round(Math.random() * (range.length - 1));
-			let pos : number = Math.round(Math.random() * range[index]);
-			console.log(pos, index, range.length - 1);
-			return pos;
+			return Math.round(Math.random() * range[index]);
 		}
 
 		private buildObstacle( amount : number) : void {
 			for(let i = 0; i < amount; i++){
-				let x: number = this.getRandomPosition([-14, 14]);
-				let y: number = this.getRandomPosition([-8, 8]);
+				let x: number = this.getRandomPosition([-11, 11]);
+				let y: number = this.getRandomPosition([-6, 6]);
 				let wallSegment = new f.Node("WallSegment");
 				let cmpMesh = new f.ComponentMesh(this.obstacleMesh);
 				let wallComponentMaterial = new f.ComponentMaterial(this.obstacleMaterial);

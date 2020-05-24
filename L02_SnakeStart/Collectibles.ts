@@ -7,6 +7,8 @@ namespace L02_SnakeStart {
 		private collectibleMesh : f.MeshSphere;
 		private collectibleMaterial : f.Material;
 		private obstacleElements : f.Node[];
+		private shadowMesh : f.MeshQuad;
+		private shadowMaterial : f.Material;
 
 		constructor(obstacleElments : f.Node[]) {
 			super("Collectables");
@@ -15,7 +17,16 @@ namespace L02_SnakeStart {
 			this.collectibleMaterial = new f.Material(
 				"SolidWhite", f.ShaderFlat, new f.CoatColored(f.Color.CSS("orange"))
 			);
-			this.initCollectibleElement(4);
+			this.shadowMesh = new f.MeshQuad();
+			let shadowIMG : HTMLImageElement = <HTMLImageElement>document.getElementById("shadow");
+			let textureIMG : f.TextureImage = new f.TextureImage();
+			textureIMG.image = shadowIMG;
+			let textureCoat : f.CoatTextured = new f.CoatTextured();
+			textureCoat.texture = textureIMG;
+			this.shadowMaterial = new f.Material(
+				"Shaow", f.ShaderTexture, textureCoat
+			)
+			this.initCollectibleElement(3);
 		}
 
 		public getCollectibleElements() : f.Node[] {
@@ -51,19 +62,42 @@ namespace L02_SnakeStart {
 			for(let i : number = 0; i < amount; i++) {
 				let collectibleElement = new f.Node("collectibleElement");
 				let cmpMesh = new f.ComponentMesh(this.collectibleMesh);
-				let wallComponentMaterial = new f.ComponentMaterial(this.collectibleMaterial);
+				let componentMaterial = new f.ComponentMaterial(this.collectibleMaterial);
 				collectibleElement.addComponent(cmpMesh);
+
 				cmpMesh.pivot.scale(f.Vector3.ONE(0.5));
+				let x = this.getRandomX([11, -11]);
+				let y = this.getRandomY([7, -7]);
 				collectibleElement.addComponent(
 					new f.ComponentTransform(
 						f.Matrix4x4.TRANSLATION(
-							new f.Vector3(this.getRandomX([14, -14]), this.getRandomY([8, -8]), 0)
+							new f.Vector3(x, y, 0)
 						)
 					)
 				);
-				collectibleElement.addComponent(wallComponentMaterial);
+				collectibleElement.addComponent(componentMaterial);
+
+				this.initShadowELement(x, y);
+
 				this.appendChild(collectibleElement);
 			}
+		}
+
+		private initShadowELement(x : number, y : number) : void {
+			let shadowNode : f.Node = new f.Node("Shadow");
+			let shadowCmpMesh : f.ComponentMesh = new f.ComponentMesh(this.shadowMesh);
+			let shadowMaterialComp : f.ComponentMaterial = new f.ComponentMaterial(this.shadowMaterial);
+			shadowNode.addComponent(shadowCmpMesh);
+			shadowNode.addComponent(shadowMaterialComp);
+			shadowCmpMesh.pivot.scale(f.Vector3.ONE(0.5));
+			shadowNode.addComponent(
+				new f.ComponentTransform(
+					f.Matrix4x4.TRANSLATION(
+						new f.Vector3(x, y, -1)
+					)
+				)
+			)
+			this.appendChild(shadowNode);
 		}
 
 	}

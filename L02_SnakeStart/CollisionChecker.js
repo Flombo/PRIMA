@@ -1,6 +1,7 @@
 "use strict";
 var L02_SnakeStart;
 (function (L02_SnakeStart) {
+    var f = FudgeCore;
     class CollisionChecker {
         constructor(snake, wallSegments, obstacleSegments, collectibles, collectibleClass) {
             this.snake = snake;
@@ -11,6 +12,8 @@ var L02_SnakeStart;
             this.collectibleClass = collectibleClass;
             this.nav = document.getElementsByTagName("nav")[0];
             this.score = 0;
+            this.enemyScore = 0;
+            this.enemyNav = document.getElementsByTagName("nav")[1];
             this.displayOneTime = 0;
             this.collectSound = new Audio("./music/correctChoice.wav");
             this.collisionSound = new Audio("./music/wrongChoice.wav");
@@ -27,6 +30,38 @@ var L02_SnakeStart;
                 if (this.snake instanceof L02_SnakeStart.PlayerSnake) {
                     this.checkSnakeSegment(snakeSegments[i]);
                 }
+                else {
+                    this.checkEnemySegmentCollision(snakeSegments[i]);
+                }
+            }
+        }
+        checkEnemySegmentCollision(snakeSegment) {
+            let x = this.snakeHead.mtxLocal.translation.x;
+            let y = this.snakeHead.mtxLocal.translation.y;
+            let segmentX = snakeSegment.mtxLocal.translation.x;
+            let segmentY = snakeSegment.mtxLocal.translation.y;
+            let diffX = segmentX - x;
+            let diffY = segmentY - y;
+            let connectionVector = new f.Vector3(diffX, diffY, 0);
+            let distance = Math.floor(Math.sqrt(Math.pow(connectionVector.x, 2) + Math.pow(connectionVector.y, 2)));
+            if (distance >= 1) {
+                switch (this.snake.getHeadDirection()) {
+                    case 'up':
+                        this.snake.turnLeft();
+                        break;
+                    case 'down':
+                        this.snake.turnRight();
+                        break;
+                    case 'left':
+                        this.snake.turnUp();
+                        break;
+                    case 'right':
+                        this.snake.turnDown();
+                        break;
+                }
+            }
+            else {
+                this.snake.setIsDeadTrue();
             }
         }
         checkSnakeSegment(snakeSegment) {
@@ -38,15 +73,16 @@ var L02_SnakeStart;
         }
         checkCollectibleCollision() {
             this.collectibles.forEach((collectible) => {
-                this.snake.getChildren().forEach((snakeSegment) => {
-                    this.checkCollectibleElement(collectible, snakeSegment);
-                });
+                this.checkCollectibleElement(collectible);
             });
         }
         checkObstacleCollision() {
             this.obstacleSegments.forEach((obstacle) => {
                 if (this.snake instanceof L02_SnakeStart.PlayerSnake) {
                     this.checkObstacle(obstacle);
+                }
+                else {
+                    this.avoidObstacle(obstacle);
                 }
             });
         }
@@ -62,18 +98,29 @@ var L02_SnakeStart;
                 if (this.snake instanceof L02_SnakeStart.PlayerSnake) {
                     this.checkWallSegment(wallSegment);
                 }
+                else {
+                    this.checkWallSegmentForEnemy(wallSegment);
+                }
             });
         }
-        checkCollectibleElement(element, snakeElement) {
-            if (Math.round(snakeElement.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
-                && Math.round(snakeElement.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)) {
-                element.getParent().removeChild(element);
+        checkCollectibleElement(element) {
+            console.log(this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
+                && this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y);
+            if (this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
+                && this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y) {
+                this.collectibleClass.removeChild(element);
                 this.collectibleClass.initCollectibleElement(1);
                 this.collectibles = this.collectibleClass.getCollectibleElements();
-                this.score++;
-                this.nav.innerText = "Score : " + this.score;
-                this.snake.grow();
+                if (this.snake instanceof L02_SnakeStart.PlayerSnake) {
+                    this.score++;
+                    this.nav.innerText = "Score : " + this.score;
+                }
+                else {
+                    this.enemyScore++;
+                    this.enemyNav.innerText = "Enemyscore : " + this.enemyScore;
+                }
                 this.collectSound.play();
+                this.snake.grow();
             }
         }
         checkWallSegment(element) {
@@ -83,6 +130,51 @@ var L02_SnakeStart;
                     Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)) {
                 this.collisionSound.play();
                 this.snake.setIsDeadTrue();
+            }
+        }
+        checkWallSegmentForEnemy(element) {
+            let x = this.snakeHead.mtxLocal.translation.x;
+            let y = this.snakeHead.mtxLocal.translation.y;
+            let wallX = element.mtxLocal.translation.x;
+            let wallY = element.mtxLocal.translation.y;
+            if (y + 1 >= wallY && element.name === "top") {
+                this.snake.moveHeadLeft();
+            }
+            else if (y - 1 <= wallY && element.name === "bottom") {
+                this.snake.moveHeadRight();
+            }
+            else if (x + 1 >= wallX && element.name === "right") {
+                this.snake.moveHeadLeft();
+            }
+            else if (x - 1 <= wallX && element.name === "left") {
+                this.snake.moveHeadRight();
+            }
+        }
+        avoidObstacle(element) {
+            let x = this.snakeHead.mtxLocal.translation.x;
+            let y = this.snakeHead.mtxLocal.translation.y;
+            let obstacleX = element.mtxLocal.translation.x;
+            let obstacleY = element.mtxLocal.translation.y;
+            let diffX = obstacleX - x;
+            let diffY = obstacleY - y;
+            let connectionVector = new f.Vector3(diffX, diffY, 0);
+            let distance = Math.floor(Math.sqrt(Math.pow(connectionVector.x, 2) + Math.pow(connectionVector.y, 2)));
+            if (distance <= 1) {
+                switch (this.snake.getHeadDirection()) {
+                    case 'up':
+                        this.snake.turnLeft();
+                        break;
+                    case 'down':
+                        this.snake.turnRight();
+                        break;
+                    case 'left':
+                        this.snake.turnUp();
+                        break;
+                    case 'right':
+                        this.snake.turnDown();
+                        break;
+                }
+                // this.snake.moveAll();
             }
         }
         displayScorePrompt() {

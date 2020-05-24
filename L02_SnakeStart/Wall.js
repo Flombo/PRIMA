@@ -24,19 +24,19 @@ var L02_SnakeStart;
             return this.getChildren();
         }
         initTopWall() {
-            this.buildWallSegment(30, 1, 3, 0, 10, 0);
+            this.buildWallSegment(35, 1, 3, 0, 10, 0, "top");
         }
         initBottomWall() {
-            this.buildWallSegment(30, 1, 3, 0, -10, 0);
+            this.buildWallSegment(35, 1, 3, 0, -10, 0, "bottom");
         }
         initLeftWall() {
-            this.buildWallSegment(1, 35, 3, -15, 0, 0);
+            this.buildWallSegment(1, 35, 3, -15, 0, 0, "left");
         }
         initRightWall() {
-            this.buildWallSegment(1, 35, 3, 15, 0, 0);
+            this.buildWallSegment(1, 35, 3, 15, 0, 0, "right");
         }
-        buildWallSegment(scaleX, scaleY, scaleZ, x, y, z) {
-            let wallSegment = new f.Node("WallSegment");
+        buildWallSegment(scaleX, scaleY, scaleZ, x, y, z, name) {
+            let wallSegment = new f.Node(name);
             let cmpMesh = new f.ComponentMesh(this.wallMesh);
             let wallComponentMaterial = new f.ComponentMaterial(this.wallMaterial);
             wallSegment.addComponent(cmpMesh);

@@ -19,14 +19,12 @@ var L02_SnakeStart;
         }
         getRandomPosition(range) {
             let index = Math.round(Math.random() * (range.length - 1));
-            let pos = Math.round(Math.random() * range[index]);
-            console.log(pos, index, range.length - 1);
-            return pos;
+            return Math.round(Math.random() * range[index]);
         }
         buildObstacle(amount) {
             for (let i = 0; i < amount; i++) {
-                let x = this.getRandomPosition([-14, 14]);
-                let y = this.getRandomPosition([-8, 8]);
+                let x = this.getRandomPosition([-11, 11]);
+                let y = this.getRandomPosition([-6, 6]);
                 let wallSegment = new f.Node("WallSegment");
                 let cmpMesh = new f.ComponentMesh(this.obstacleMesh);
                 let wallComponentMaterial = new f.ComponentMaterial(this.obstacleMaterial);
