@@ -15,7 +15,7 @@ var L02_SnakeStart;
             let textureCoat = new f.CoatTextured();
             textureCoat.texture = textureIMG;
             this.shadowMaterial = new f.Material("Shaow", f.ShaderTexture, textureCoat);
-            this.initCollectibleElement(3);
+            this.initCollectibleElement(5);
         }
         getCollectibleElements() {
             return this.getChildren();
@@ -53,19 +53,8 @@ var L02_SnakeStart;
                 let y = this.getRandomY([7, -7]);
                 collectibleElement.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(x, y, 0))));
                 collectibleElement.addComponent(componentMaterial);
-                this.initShadowELement(x, y);
                 this.appendChild(collectibleElement);
             }
-        }
-        initShadowELement(x, y) {
-            let shadowNode = new f.Node("Shadow");
-            let shadowCmpMesh = new f.ComponentMesh(this.shadowMesh);
-            let shadowMaterialComp = new f.ComponentMaterial(this.shadowMaterial);
-            shadowNode.addComponent(shadowCmpMesh);
-            shadowNode.addComponent(shadowMaterialComp);
-            shadowCmpMesh.pivot.scale(f.Vector3.ONE(0.5));
-            shadowNode.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(new f.Vector3(x, y, -1))));
-            this.appendChild(shadowNode);
         }
     }
     L02_SnakeStart.Collectibles = Collectibles;

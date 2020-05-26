@@ -47,7 +47,7 @@ namespace L02_SnakeStart{
 				if(this.snake instanceof PlayerSnake) {
 					this.checkSnakeSegment(snakeSegments[i]);
 				} else {
-					this.checkEnemySegmentCollision(snakeSegments[i]);
+					// this.checkEnemySegmentCollision(snakeSegments[i]);
 				}
 			}
 		}
@@ -93,6 +93,7 @@ namespace L02_SnakeStart{
 		}
 
 		private checkCollectibleCollision() : void {
+			this.collectibles = this.collectibleClass.getCollectibleElements();
 			this.collectibles.forEach((collectible) => {
 				this.checkCollectibleElement(collectible);
 			});
@@ -129,11 +130,9 @@ namespace L02_SnakeStart{
 		}
 
 		private checkCollectibleElement(element : f.Node) : void{
-			console.log(this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-				&& this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y);
 			if(
-				this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-				&& this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y
+				Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
+				&& Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)
 			){
 				this.collectibleClass.removeChild(element);
 				this.collectibleClass.initCollectibleElement(1);
@@ -167,6 +166,7 @@ namespace L02_SnakeStart{
 			let y = this.snakeHead.mtxLocal.translation.y;
 			let wallX = element.mtxLocal.translation.x;
 			let wallY = element.mtxLocal.translation.y;
+
 
 			if (
 				y + 1 >= wallY && element.name === "top"
@@ -206,14 +206,13 @@ namespace L02_SnakeStart{
 						this.snake.turnDown();
 						break;
 				}
-				// this.snake.moveAll();
 			}
 		}
 
 
 		public displayScorePrompt() : void {
 			if(this.displayOneTime === 0){
-				alert("You died ! Your score is " + this.score);
+				alert("You died ! Your score is " + this.score + " the score of the enemy is " + this.enemyScore);
 				this.displayOneTime = 1;
 			}
 		}

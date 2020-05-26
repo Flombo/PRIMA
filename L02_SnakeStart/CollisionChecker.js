@@ -31,7 +31,7 @@ var L02_SnakeStart;
                     this.checkSnakeSegment(snakeSegments[i]);
                 }
                 else {
-                    this.checkEnemySegmentCollision(snakeSegments[i]);
+                    // this.checkEnemySegmentCollision(snakeSegments[i]);
                 }
             }
         }
@@ -72,6 +72,7 @@ var L02_SnakeStart;
             }
         }
         checkCollectibleCollision() {
+            this.collectibles = this.collectibleClass.getCollectibleElements();
             this.collectibles.forEach((collectible) => {
                 this.checkCollectibleElement(collectible);
             });
@@ -104,10 +105,8 @@ var L02_SnakeStart;
             });
         }
         checkCollectibleElement(element) {
-            console.log(this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-                && this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y);
-            if (this.snakeHead.mtxLocal.translation.x === element.mtxLocal.translation.x
-                && this.snakeHead.mtxLocal.translation.y === element.mtxLocal.translation.y) {
+            if (Math.round(this.snakeHead.mtxLocal.translation.x) === Math.round(element.mtxLocal.translation.x)
+                && Math.round(this.snakeHead.mtxLocal.translation.y) === Math.round(element.mtxLocal.translation.y)) {
                 this.collectibleClass.removeChild(element);
                 this.collectibleClass.initCollectibleElement(1);
                 this.collectibles = this.collectibleClass.getCollectibleElements();
@@ -174,12 +173,11 @@ var L02_SnakeStart;
                         this.snake.turnDown();
                         break;
                 }
-                // this.snake.moveAll();
             }
         }
         displayScorePrompt() {
             if (this.displayOneTime === 0) {
-                alert("You died ! Your score is " + this.score);
+                alert("You died ! Your score is " + this.score + " the score of the enemy is " + this.enemyScore);
                 this.displayOneTime = 1;
             }
         }

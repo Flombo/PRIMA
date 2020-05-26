@@ -31,23 +31,18 @@ html body header nav {
   padding: 0.5%;
   margin-left: 1%;
 }
-html body .buttonPanel {
-  z-index: 10;
-  position: fixed;
-  bottom: 0;
-  left: 40vw;
+html body h1 {
+  color: blueviolet;
+  font-weight: bold;
+  font-size: 120px;
+  z-index: 999999;
+  position: absolute;
+  left: 35%;
+  top: 40%;
+  visibility: hidden;
 }
-html body .buttonPanel button {
-  border: 5px solid #202020;
-  border-radius: 10px;
-  width: 200px;
-  height: 150px;
-}
-html body .buttonPanel button:hover {
-  opacity: 50%;
-}
-html body .buttonPanel button:focus {
-  outline: none;
+html body h1.visible {
+  visibility: visible;
 }
 html body img {
   visibility: hidden;

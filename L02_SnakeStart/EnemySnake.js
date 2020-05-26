@@ -86,7 +86,7 @@ var L02_SnakeStart;
                 let segmentTranslation = segment.mtxLocal.translation.copy;
                 segmentTranslation.subtract(snakeTranslation);
                 let distance = Math.sqrt(Math.pow(segmentTranslation.x, 2) + Math.pow(segmentTranslation.y, 2));
-                if (distance <= 4) {
+                if (distance <= 5) {
                     targets.set(distance, [segment.mtxLocal.translation.x, segment.mtxLocal.translation.y]);
                 }
                 else {

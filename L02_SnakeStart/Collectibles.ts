@@ -26,7 +26,7 @@ namespace L02_SnakeStart {
 			this.shadowMaterial = new f.Material(
 				"Shaow", f.ShaderTexture, textureCoat
 			)
-			this.initCollectibleElement(3);
+			this.initCollectibleElement(5);
 		}
 
 		public getCollectibleElements() : f.Node[] {
@@ -77,27 +77,8 @@ namespace L02_SnakeStart {
 				);
 				collectibleElement.addComponent(componentMaterial);
 
-				this.initShadowELement(x, y);
-
 				this.appendChild(collectibleElement);
 			}
-		}
-
-		private initShadowELement(x : number, y : number) : void {
-			let shadowNode : f.Node = new f.Node("Shadow");
-			let shadowCmpMesh : f.ComponentMesh = new f.ComponentMesh(this.shadowMesh);
-			let shadowMaterialComp : f.ComponentMaterial = new f.ComponentMaterial(this.shadowMaterial);
-			shadowNode.addComponent(shadowCmpMesh);
-			shadowNode.addComponent(shadowMaterialComp);
-			shadowCmpMesh.pivot.scale(f.Vector3.ONE(0.5));
-			shadowNode.addComponent(
-				new f.ComponentTransform(
-					f.Matrix4x4.TRANSLATION(
-						new f.Vector3(x, y, -1)
-					)
-				)
-			)
-			this.appendChild(shadowNode);
 		}
 
 	}

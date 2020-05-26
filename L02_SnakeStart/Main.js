@@ -7,7 +7,7 @@ var L02_SnakeStart;
     });
     function hndLoad(_event) {
         let canvas = document.querySelector("canvas");
-        canvas.setAttribute("style", "z-index: 90;  width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
+        styleCanvas(canvas);
         f.RenderManager.initialize(true, true);
         let root = new f.Node("root");
         let groundNode = new f.Node("ground");
@@ -50,22 +50,47 @@ var L02_SnakeStart;
         let viewport = new f.Viewport();
         viewport.initialize("Viewport", root, playerSnake.getCamera(), canvas);
         let canvasMirror = document.getElementById('canvasMini');
-        canvasMirror.setAttribute("style", "width:" + (window.innerWidth / 7)
-            + "px; height:" + (window.innerHeight / 7) + "px;"
-            + "z-index:" + 999999 + ";"
-            + "position: absolute;"
-            + "left: 75%;"
-            + "top: 0;"
-            + "border: 5px solid orange;");
+        styleMiniMap(canvasMirror);
         document.body.appendChild(canvasMirror);
         let viewportMini = new f.Viewport();
         viewportMini.initialize("viewportMini", root, playerSnake.getCameraForMirror(), canvasMirror);
         f.Loop.start(f.LOOP_MODE.TIME_GAME, 3);
         f.Loop.addEventListener("loopFrame", renderLoop);
+        let isPaused = false;
+        window.addEventListener("keydown", (event) => {
+            let h1 = document.querySelector('h1');
+            if (event.key === f.KEYBOARD_CODE.ESC) {
+                if (isPaused) {
+                    isPaused = false;
+                    h1.setAttribute("class", "");
+                    styleMiniMap(canvasMirror);
+                    styleCanvas(canvas);
+                }
+                else {
+                    isPaused = true;
+                    h1.setAttribute("class", "visible");
+                    canvasMirror.setAttribute("style", "opacity: 25%;");
+                    canvas.setAttribute("style", "opacity: 25%;");
+                }
+            }
+        });
+        function styleCanvas(canvas) {
+            canvas.setAttribute("style", "opacity: 100%; z-index: 90;  width:" + window.innerWidth + "px; height:" + window.innerHeight + "px;");
+        }
+        function styleMiniMap(canvas) {
+            canvas.setAttribute("style", "width:" + (window.innerWidth / 7)
+                + "px; height:" + (window.innerHeight / 7) + "px;"
+                + "z-index:" + 999999 + ";"
+                + "position: absolute;"
+                + "left: 75%;"
+                + "top: 0;"
+                + "border: 5px solid orange;"
+                + "opacity: 100%;");
+        }
         function moveLoop() {
             if (!playerSnake.getIsDead()) {
-                // playerSnake.checkCollisions();
-                // playerSnake.moveAll();
+                playerSnake.checkCollisions();
+                playerSnake.moveAll();
                 enemySnake.checkCollisions();
             }
             else {
@@ -73,10 +98,12 @@ var L02_SnakeStart;
             }
         }
         function renderLoop() {
-            if (playerSnake !== undefined && playerSnake !== null) {
-                viewport.draw();
-                moveLoop();
-                viewportMini.draw();
+            if (!isPaused) {
+                if (playerSnake !== undefined && playerSnake !== null) {
+                    viewport.draw();
+                    viewportMini.draw();
+                    moveLoop();
+                }
             }
         }
     }

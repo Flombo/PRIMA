@@ -7,7 +7,7 @@ namespace L02_SnakeStart {
 
 	function hndLoad(_event: Event): void {
 		let canvas: HTMLCanvasElement = document.querySelector("canvas");
-		canvas.setAttribute("style", "z-index: 90;  width:" + window.innerWidth + "px; height:" + window.innerHeight + "px");
+		styleCanvas(canvas);
 		f.RenderManager.initialize(true, true);
 		let root : f.Node = new f.Node("root");
 
@@ -77,15 +77,7 @@ namespace L02_SnakeStart {
 		viewport.initialize("Viewport", root, playerSnake.getCamera(), canvas);
 
 		let canvasMirror : HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('canvasMini');
-		canvasMirror.setAttribute("style",
-			"width:" + (window.innerWidth / 7)
-			+ "px; height:" + (window.innerHeight / 7) + "px;"
-			+ "z-index:" + 999999 +";"
-			+ "position: absolute;"
-			+ "left: 75%;"
-			+ "top: 0;"
-			+ "border: 5px solid orange;"
-		);
+		styleMiniMap(canvasMirror);
 
 		document.body.appendChild(canvasMirror);
 
@@ -93,11 +85,45 @@ namespace L02_SnakeStart {
 		viewportMini.initialize("viewportMini", root, playerSnake.getCameraForMirror(), canvasMirror);
 		f.Loop.start(f.LOOP_MODE.TIME_GAME, 3);
 		f.Loop.addEventListener("loopFrame", renderLoop);
+		let isPaused : boolean = false;
+		window.addEventListener("keydown", (event) => {
+			let h1 : HTMLElement = <HTMLElement>document.querySelector('h1');
+			if(event.key === f.KEYBOARD_CODE.ESC){
+				if(isPaused){
+					isPaused = false;
+					h1.setAttribute("class", "");
+					styleMiniMap(canvasMirror);
+					styleCanvas(canvas);
+				} else {
+					isPaused = true;
+					h1.setAttribute("class", "visible");
+					canvasMirror.setAttribute("style", "opacity: 25%;");
+					canvas.setAttribute("style", "opacity: 25%;");
+				}
+			}
+		});
+
+		function styleCanvas(canvas : HTMLCanvasElement) {
+			canvas.setAttribute("style", "opacity: 100%; z-index: 90;  width:" + window.innerWidth + "px; height:" + window.innerHeight + "px;");
+		}
+
+		function styleMiniMap(canvas : HTMLCanvasElement) : void{
+			canvas.setAttribute("style",
+				"width:" + (window.innerWidth / 7)
+				+ "px; height:" + (window.innerHeight / 7) + "px;"
+				+ "z-index:" + 999999 +";"
+				+ "position: absolute;"
+				+ "left: 75%;"
+				+ "top: 0;"
+				+ "border: 5px solid orange;"
+				+ "opacity: 100%;"
+			);
+		}
 
 		function moveLoop() {
 			if (!playerSnake.getIsDead()) {
-				// playerSnake.checkCollisions();
-				// playerSnake.moveAll();
+				playerSnake.checkCollisions();
+				playerSnake.moveAll();
 				enemySnake.checkCollisions();
 			} else {
 				playerSnake.displayScorePrompt();
@@ -105,10 +131,12 @@ namespace L02_SnakeStart {
 		}
 
 		function renderLoop () {
-			if (playerSnake !== undefined && playerSnake !== null) {
-				viewport.draw();
-				moveLoop();
-				viewportMini.draw();
+			if(!isPaused) {
+				if (playerSnake !== undefined && playerSnake !== null) {
+					viewport.draw();
+					viewportMini.draw();
+					moveLoop();
+				}
 			}
 		}
 
