@@ -19,12 +19,13 @@
 </head>
 <body>
 <header>
-    <nav>Score : 0</nav>
-    <nav style="color: salmon">Enemyscore : 0</nav>
+    <nav style="opacity: 0;">Score : 0</nav>
+    <nav style="color: salmon; opacity: 0;">Enemyscore : 0</nav>
 </header>
 <canvas></canvas>
 <canvas id="canvasMini"></canvas>
-<h1>Paused</h1>
+<h1 id="pausePrompt">Paused</h1>
+<h1 id="startPrompt" class="visible">Press "return" to start</h1>
 <img id="ground" src="texture/gras.jpg">
 <img id="wall" src="texture/brickwall.jpg">
 <img id="shadow" src="texture/shadow.png">

@@ -85,20 +85,34 @@ namespace L02_SnakeStart {
 		viewportMini.initialize("viewportMini", root, playerSnake.getCameraForMirror(), canvasMirror);
 		f.Loop.start(f.LOOP_MODE.TIME_GAME, 3);
 		f.Loop.addEventListener("loopFrame", renderLoop);
-		let isPaused : boolean = false;
+		let isPaused : boolean = true;
 		window.addEventListener("keydown", (event) => {
-			let h1 : HTMLElement = <HTMLElement>document.querySelector('h1');
+			let pausePrompt : HTMLElement = <HTMLElement>document.getElementById("pausePrompt");
+			let startPrompt : HTMLElement = <HTMLElement>document.getElementById("startPrompt");
+			let nav : HTMLElement = document.getElementsByTagName("nav")[0];
+			let enemyNav : HTMLElement= document.getElementsByTagName("nav")[1];
+
 			if(event.key === f.KEYBOARD_CODE.ESC){
 				if(isPaused){
 					isPaused = false;
-					h1.setAttribute("class", "");
+					pausePrompt.setAttribute("class", "");
 					styleMiniMap(canvasMirror);
 					styleCanvas(canvas);
 				} else {
 					isPaused = true;
-					h1.setAttribute("class", "visible");
+					pausePrompt.setAttribute("class", "visible");
 					canvasMirror.setAttribute("style", "opacity: 25%;");
 					canvas.setAttribute("style", "opacity: 25%;");
+				}
+			}
+			if(event.key === f.KEYBOARD_CODE.ENTER){
+				if(isPaused){
+					isPaused = false;
+					startPrompt.setAttribute("class", "");
+					styleMiniMap(canvasMirror);
+					styleCanvas(canvas);
+					nav.setAttribute("style", "opacity : 100%;");
+					enemyNav.setAttribute("style", "opacity : 100%; color: salmon;");
 				}
 			}
 		});
